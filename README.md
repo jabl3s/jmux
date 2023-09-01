@@ -10,7 +10,9 @@ source ~./bashrc
 ### 4.1) jmuxconn  
 jmuxconn ssh_username ssh_password ipadresses:LIST_THEM_WITH_SPACES     
 ### 4.2) jmuxcomm  
-jmuxcomm number_of_succesful_opened_tmux_panes_depending_on_vertical_screen_space   
+jmuxcomm tmux_panes_number command  
+N.B.:For-sudo:((jmuxcomm tmux_panes_number 'echo "ssh_password" | sudo -S apt update'))  
+((To send a Ctrl+C just specify tmux_panes_number followed by no command.))  
 ### 4.3) jumuxdiss  
 jmuxdiss ((Kills-the-jmuxconn-and-tmux-session))  
   

@@ -25,13 +25,17 @@ function jmuxcomm() {
     for word in "$@"; do
         cmd="$cmd $word"
     done
-    for ((i=1; ; i++)); do
-    # You can add your commands here
-    tmux send-keys -t "jsession:0.$i" "$cmd" C-m
-    # Add a break condition if needed
-    # For example, to stop after 10 iterations
-    if [ $i -eq $servercount ]; then
-        break
+    if [ -z "$cmd" ]; then
+        tmux send-keys -t "jsession:0.$i" "" C-c
+    else
+        for ((i=1; ; i++)); do
+            # You can add your commands here
+            tmux send-keys -t "jsession:0.$i" "$cmd" C-m
+            # Add a break condition if needed
+            # For example, to stop after 10 iterations
+            if [ $i -eq $servercount ]; then
+                break
+            fi
+        done
     fi
-    done
     }
