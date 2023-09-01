@@ -2,10 +2,10 @@
 #ADD TO BASHRC:
 #source /home/ubuntu/jmux.sh
 # Define a "class" to manage tmux sessions with SSH connections
-function jmuxdiss() {
+function jmuxclose() {
     tmux kill-session -t jsession
 }
-function jmuxconn() {
+function jmuxconnect() {
     local option_ssh_copy_id=false
     if [ $# -ge 3 ]; then
         local username="$1"
@@ -18,7 +18,7 @@ function jmuxconn() {
             fi
         done
     else
-        echo "Ideally give ssh_username, ssh_pass then as many ip you want"
+        echo "Ideally give ssh_username, ssh_pass then as many ssh_ip you want"
     fi
     if [ "$option_ssh_copy_id" = true ]; then
         for ip in "$@"; do
@@ -37,7 +37,7 @@ function jmuxconn() {
         echo "Provide atleast one ip address"
     fi
     }
-function jmuxcomm() {
+function jmuxcommand() {
     local servercount="$1"
     shift
     local cmd="" 
@@ -62,4 +62,31 @@ function jmuxcomm() {
             fi
         done
     fi
+
+    function jmuxmigrate() {
+        local option_install_tmux=false
+        if [ $# -ge 3 ]; then
+            local username="$1"
+            local password="$2"
+            shift 2
+            for arg in "$@"; do
+            if [ "$arg" = "-install" ]; then
+                option_install_tmux=true
+                break
+            fi
+        done
+        else
+            echo "Ideally give ssh_username, ssh_pass, ssh_ip"
+        fi
+        if [ "$option_install_tmux" = true ]; then
+        elif [ $# -ge 1 ]; then
+            tmux attach-session -t jsession:0.0
+            tmux new-window -v -n jmigrate "sshpass -p $password ssh $username@$ip"
+            tmux send-keys -t "jsession:jmigrate" "echo $password | sudo -S apt-get install -y tmux" C-m
+            tmux kill-window -t "jsession:jmigrate"
+            echo "Assuming tmux installed on remote host ok..."
+        else
+        echo "Provide atleast one ip address"
+        fi
+    }
     }
