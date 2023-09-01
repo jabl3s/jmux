@@ -15,7 +15,7 @@ jmuxconnect ssh_username ssh_password ssh_ip_adresses:LIST_THEM_WITH_SPACES
 jmuxcommand tmux_panes_number command  
 N.B.:For-sudo:((jmuxcomm tmux_panes_number 'echo "ssh_password" | sudo -S apt update'))  
 ((To send a Ctrl+C just specify tmux_panes_number followed by no command.))  
-### 4.3) jmuxmigrate x y z   
+### 4.3) jmuxmigrate x y z -install_tmux     
 jmuxmigrate ssh_username ssh_password ssh_ip 
 ### 4.4) jumuxclose     
 jmuxdisconnect ((Kills-the-jmuxconn-and-tmux-session))  
