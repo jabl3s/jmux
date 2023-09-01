@@ -1,4 +1,6 @@
-# jmux - ((tmux wrapper))  
+# jmux - ((tmux wrapper)) 
+current limmitations are on the amount of panes you can fit verticaly...  
+
   
 ## Step1) ((Install dependencies))  
 sudo apt install sshpass tmux ssh-askpass ssh_copy_id -y      
