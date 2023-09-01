@@ -26,7 +26,11 @@ function jmuxcomm() {
         cmd="$cmd $word"
     done
     if [ -z "$cmd" ]; then
-        tmux send-keys -t "jsession:0.$i" "" C-c
+        for ((i=1; ; i++)); do
+            tmux send-keys -t "jsession:0.$i" "" C-c
+        if [ $i -eq $servercount ]; then
+                break
+            fi
     else
         for ((i=1; ; i++)); do
             # You can add your commands here
