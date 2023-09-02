@@ -102,7 +102,7 @@ function jmux_update(){
         echo "$line_to_check" >> ~/.bashrc
         echo "Added the line to ~/.bashrc."
     fi
-    curl -o ~/jmux.sh https://raw.githubusercontent.com/jabl3s/jmux/main/jmux.sh && source ~/.bashrc
+    curl -H "Cache-Control: no-cache" -o ~/jmux.sh https://raw.githubusercontent.com/jabl3s/jmux/main/jmux.sh && source ~/.bashrc
 }
 function jmux_rke(){
         # Specify the path to the YAML file
