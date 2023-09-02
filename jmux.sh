@@ -25,16 +25,16 @@ function jmux() {
         local param="$1"
         shift
         local reached="false"
-        if [ $param = "connect" ]; then $reached = "true"; jmux_connect "$#"; fi
-        if [ $param = "command" ]; then $reached = "true"; jmux_command "$#"; fi
+        if [ $param = "connect" ]; then $reached = "true"; jmux_connect "$@"; fi
+        if [ $param = "command" ]; then $reached = "true"; jmux_command "$@"; fi
         if [ $param = "hide" ]; then $reached = "true"; jmux_hide; fi
         if [ $param = "show" ]; then $reached = "true"; jmux_show; fi
         if [ $param = "close" ]; then $reached = "true"; jmux_close; fi
         if [ $param = "dependencies" ]; then $reached = "true"; jmux_dependencies; fi
         if [ $param = "update" ]; then $reached = "true"; jmux_update; fi
-        if [ $param = "migrate" ]; then $reached = "true"; jmux_migrate "$#"; fi
-        if [ $param = "rke" ]; then $reached = "true"; jmux_rke "$#"; fi
-        if [ $param = "ssh_copy_id" ]; then $reached = "true"; jmux_ssh_copy_id "$#"; fi
+        if [ $param = "migrate" ]; then $reached = "true"; jmux_migrate "$@"; fi
+        if [ $param = "rke" ]; then $reached = "true"; jmux_rke "$@"; fi
+        if [ $param = "ssh_copy_id" ]; then $reached = "true"; jmux_ssh_copy_id "$@"; fi
         if [ $param = "help" ]; then $reached = "true"; jmux; fi
         if [ $reached = "true" ]; then echo ""; else echo ""; fi
     fi
