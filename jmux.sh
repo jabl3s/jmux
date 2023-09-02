@@ -6,7 +6,7 @@ function jmux_print_prompt(){
     for ((i = "$start"; i < "$finish"; i++)); do #for ((i = 0; i < ${#commands[@]}; i++)); do
         command="${commands[i]}"
         description="${descriptions[i]}"
-        printf "jmux %-*s %s\n" "$command_width" "$command:" "${description:0:$((command_width-2))}.."
+        printf "jmux %-*s %s\n" "$command_width" "$command:" "${description:0:30)}.." #"${description:0:$((command_width-2))}.."
     done
 }
 commands=( \
