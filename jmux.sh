@@ -1,5 +1,7 @@
 #!/bin/bash
-function jmux_print_prompt(start,finish){
+function jmux_print_prompt(){
+    local start="$1"
+    local finish="$2"
     local command_width=14
     for ((i = "$start"; i < "$finish"; i++)); do #for ((i = 0; i < ${#commands[@]}; i++)); do
         command="${commands[i]}"
@@ -35,11 +37,11 @@ function jmux() {
         echo "======================================================================"
         echo "JMUX is a TMUX wrapper, see uses below" 
         echo ""
-        jmux_print_prompt(1,4)
+        jmux_print_prompt 1 4
         echo ""
-        jmux_print_prompt(4,6)
+        jmux_print_prompt 4 6
         echo ""
-        jmux_print_prompt(6,7)
+        jmux_print_prompt 6 7
         echo "."
         echo "."
         echo "."
@@ -177,7 +179,7 @@ function jmux_ssh_copy_id(){
     fi
 }
 function jmux_more(){
-    jmux_print_prompt(7, ${#commands[@]})
+    jmux_print_prompt 7 ${#commands[@]}
     echo "================================================================="
     echo "Unlike ssh commands, jmux can still keep ssh sessions alive"
     echo "even without connection and stays active until jmux close is called."
