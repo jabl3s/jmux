@@ -1,11 +1,23 @@
 #!/bin/bash
+# Declare an associative array to store key-value pairs
+declare -A command_descriptions
+# Define the key-value pairs (commands as keys and descriptions as values)
+command_descriptions["connect"]="user@ip user@ip user@ip user@ip (limited to four tmux ssh panes at a time.)"
+command_descriptions["command"]="[must_provide_number_of_panes] ...then leave blank to send ctrl+c to number of panes, ...pipe password in for sudo commands, see example of this in read me."
+command_descriptions["hide"]="(jmux hide keeps ssh panes active, reconnect with empty jmux connect"
+command_descriptions["disconnect"]="(All ssh panes connections end and jmux session ends, i.e. returning the console back to normal)"
+command_descriptions["dependencies"]="(after first-ever jmux.sh download run this to get everything needed for jmux to work)"
+command_descriptions["update"]="(gets the latest jmux from jabl3s git)"
+command_descriptions["more"]="(Extend this prompt with more commands and additional info like current the limitations of jmux)"
+command_descriptions["rke"]="(work in progress)"
+command_descriptions["migrate"]="user@ip (work in progress)"
+command_descriptions["ssh_copy_id"]="user@ip user@ip user@ip... (work in progress)"
 function jmux_print_prompt(){
-    local start="$1"
-    local finish="$2"
-    local description_width=$(tput cols)-command_width-10
-    for ((i = "$start"; i < "$finish"; i++)); do #for ((i = 0; i < ${#commands[@]}; i++)); do
-        command="${commands[i]}"
-        description="${descriptions[i]}"
+    local inputs="$@"
+    local description_width=$(tput cols)-20
+    # Access and print the key-value pairs
+    for command in "${!command_descriptions[inputs]}"; do #"${!command_descriptions[@]}"
+        description="${command_descriptions[$command]}"
         local descriptionlength="${#description}"
         for ((trunkstart = 0; trunkstart < descriptionlength; trunkstart += description_width)); do
             local truncated_part="${description:trunkstart:description_width}"
@@ -17,39 +29,17 @@ function jmux_print_prompt(){
         done
     done
 }
-commands=( \
-"connect" \
-"command" \
-"hide" \
-"disconnect" \
-"dependencies" \
-"update" \
-"more" \
-"rke" \
-"migrate" \
-"ssh_copy_id")
-descriptions=( \
-"user@ip user@ip user@ip user@ip (limmited to four tmux ssh panes at a time.)" \
-"[must_provide_number_of_panes] ...then leave blank to send ctrl+c to number of panes, ...pipe password in for sudo commands, see example of this in read me." \
-"(jmux hide keeps ssh panes active, reconnect with empty jmux connect" \
-"(All ssh panes connections end and jmux session ends, i.e. returning the console back to normal)" \
-"(after first ever jmux.sh download run this to get everything needed for jmux to work)" \
-"(gets the latest jmux from jabl3s git)" \
-"(Extend this prompt with more commands and additional info like current the limitations of jmux)" \
-"(work in progress)" \
-"user@ip (work in progress)" \
-"user@ip user@ip user@ip... (work in progress)")
 function jmux() {
     if [ $# -lt 1 ] || [ $# -gt 10 ]; then
         echo ""
         printf "%*s\n" "$(tput cols)" | tr ' ' "="
         echo "JMUX is a TMUX wrapper, see uses below" 
         echo ""
-        jmux_print_prompt 1 4
+        jmux_print_prompt connect command hide disconnect
         echo ""
-        jmux_print_prompt 4 6
+        jmux_print_prompt dependencies update
         echo ""
-        jmux_print_prompt 6 7
+        jmux_print_prompt more
         echo "."
         echo "."
         echo "."
