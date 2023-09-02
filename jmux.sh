@@ -42,7 +42,7 @@ function jmux_dependencies() {
 }
 function jmux_update(){
     # Define the line to check for
-    line_to_check="source ~/jmux"
+    line_to_check="source ~/jmux.sh"
     # Check if the line is already in ~/.bashrc
     if grep -qF "$line_to_check" ~/.bashrc; then
         echo "The line is already in ~/.bashrc."
@@ -51,7 +51,7 @@ function jmux_update(){
         echo "$line_to_check" >> ~/.bashrc
         echo "Added the line to ~/.bashrc."
     fi
-    curl -o ~/jmux https://raw.githubusercontent.com/jabl3s/jmux/main/jmux.sh && source ~/.bashrc
+    curl -o ~/jmux.sh https://raw.githubusercontent.com/jabl3s/jmux/main/jmux.sh && source ~/.bashrc
 }
 function jmux_rke(){
         # Specify the path to the YAML file
