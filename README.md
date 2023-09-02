@@ -15,13 +15,7 @@ jmux update
 ## Usage  
 - Tmux pane navigation is Ctrl+B the arrow key.  
 - Use "exit" command to terminate any ssh sessions.  
-<<<<<<< Updated upstream
 jmux connect ubuntu@192.168.1.1 ubuntu@192.168.1.2 ubuntu@192.168.1.3 ubuntu@192.168.1.4  
-  
-![Alt text](/assets/images/jmuxdemo.gif)  
-
-=======
->>>>>>> Stashed changes
   
 ![Alt text](/assets/images/jmuxdemo.gif) 
 
