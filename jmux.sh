@@ -106,7 +106,6 @@ function jmux_command() { #USE LIKE: jmuxcommand x y..y
         done
     else
         for ((i=1; ; i++)); do
-            # You can add your commands here
             tmux send-keys -t "jsession:0.$i" "$cmd" C-m
             # Add a break condition if needed
             # For example, to stop after 10 iterations
@@ -119,10 +118,10 @@ function jmux_command() { #USE LIKE: jmuxcommand x y..y
 function jmux_hide() { #USE LIKE: jmux_hide 
     tmux detach-client
 }
-function jmux_show() { #USE LIKE: jmuxclose
+function jmux_show() { #USE LIKE: jmux_show
     tmux attach-session -t jsession:0.0
 }
-function jmux_disconnect() { #USE LIKE: jmuxclose
+function jmux_disconnect() { #USE LIKE: jmux_disconnect
     tmux kill-session -t jsession
 }
 function jmux_dependencies() {
