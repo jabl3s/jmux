@@ -67,19 +67,19 @@ function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip
         sleep 3
         tmux attach-session -t jsession:0.0
     elif [ $# -lt 1 ] || [ $# -gt 4 ]; then   
-        printf "\nNo current session active to connect to..."
+        printf "\nNo current session active to connect to...\n"
         echo "Start a jmux connect session with at least one input of user@ip (up to limmit of four)"
         echo "Min: jmux connect user@ip" 
         echo "Max: jmux connect user@ip1 user@ip2 user@ip3 user@ip4" 
     else
         read -s -p "Enter the password being used on all these servers:" serverpass  
         # Create a new tmux session named "jsession"
-        tmux new-session -d -s jsession "sshpass -p $serverpass ssh $1"
+        tmux new-session -d -s jsession "sshpass -p $serverpass ssh -o StrictHostKeyChecking=no $1"
         # Shift the arguments to remove the first IP address
         shift
         # Loop through the remaining IP addresses and create vertical splits
         for ip in "$@"; do
-            tmux split-window -v "sshpass -p $serverpass ssh $ip"
+            tmux split-window -v "sshpass -p $serverpass ssh -o StrictHostKeyChecking=no $ip"
         done
         # Set the layout to even-vertical
         tmux select-layout even-vertical
