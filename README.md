@@ -16,7 +16,7 @@ curl -o ~/jmux.sh https://raw.githubusercontent.com/jabl3s/jmux/main/jmux.sh && 
 jmux update   
 ## jmux connect: simple example  
 jmux connect ubuntu@192.168.1.1 ubuntu@192.168.1.2 ubuntu@192.168.1.3 ubuntu@192.168.1.4  
-![Alt text](/assets/images/image.png)  
+![Alt text](/assets/images/image-1.png)  
 
   
 
