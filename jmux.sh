@@ -169,7 +169,7 @@ function jmux_ssh_copy_id(){
     fi
 }
 function jmux_more(){
-    jmux_print_prompt 7 ${#commands[@]}
+    jmux_print_prompt rke migrate ssh_copy_id
     printf "%*s\n" "$(tput cols)" | tr ' ' "="
     echo "Unlike ssh commands, jmux can still keep ssh sessions alive"
     echo "even without connection and stays active until jmux close is called."
