@@ -71,16 +71,17 @@ function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip
         echo "Max: jmux connect user@ip1 user@ip2 user@ip3 user@ip4" 
     else
         read -s -p "Enter the password being used on all these servers:" serverpass  
-        tmux new-session -d -s jsession
+        tmux new-session -d -s jsession:jmux
+        tmux attach-session -t jsession:jmux
         tmux new-window -n jwindow "sshpass -p $serverpass ssh -t $1"
         shift
-        jmux_show
         for ip in "$@"; do
             tmux split-window -v "sshpass -p $serverpass ssh -t $ip"
         done
+        tmux attach-session -t jsession:jwindow
         tmux select-layout even-vertical
         tmux setw synchronize-panes on
-        tmux kill-window -t 0
+        #tmux kill-window -t 0
     fi
 }
 function jmux_command() { #USE LIKE: jmux_command x y..y
@@ -103,9 +104,6 @@ function jmux_command() { #USE LIKE: jmux_command x y..y
 }
 function jmux_hide() { #USE LIKE: jmux_hide 
     tmux detach-client
-}
-function jmux_show() { #USE LIKE: jmux_show
-    tmux attach-session -t jsession:jwindow.0
 }
 function jmux_disconnect() { #USE LIKE: jmux_disconnect
     tmux kill-session -t jsession
