@@ -1,43 +1,112 @@
 #!/bin/bash
-#ADD TO BASHRC:
-#source /home/ubuntu/jmux.sh
-# Define a "class" to manage tmux sessions with SSH connections
-function jmuxclose() {
+function jmux() {
+    if [ $# -lt 1 ]; then
+        echo "Unlike ssh commands, jmux connect can still keep ssh sessions alive without connection..."
+        echo "...just reconnect with jmux show"
+        echo ""
+        echo ""
+        echo "======================================================================"
+        echo "JMUX is a TMUX wrapper, see uses below" 
+        echo ""
+        echo "jmux connect      user@ip user@ip user@ip user@ip (limmited to four tmux ssh panes at a time)"
+        echo "jmux command      [number_of_panes] then enter most types of commands here like normal, or as string, be sure to pipe password in for sudo commands, leave blank to send ctrl+c"
+        echo "jmux hide         (Hides the current jmux connect ssh/tmux session, it is still active even if connection goes down)"        
+        echo "jmux show         (Shows the session)"        
+        echo "jmux close        (Closes all ssh sessions then closes jmux session)"
+        echo ""
+        echo "jmux dependencies (after first ever jmux.sh download run this to get everything needed for jmux to work)"
+        echo "jmux update       (gets the latest jmux from jabl3s git)"
+        echo "jmux migrate      user@ip (work in progress)"
+        echo "jmux rke"
+        echo "jmux ssh_copy_id  user@ip user@ip user@ip... (work in progress)"
+        echo "jmux help"
+        echo "======================================================================"
+    else
+        local param="$1"
+        local reached="false"
+        shift
+        if [ $param = "dependencies" ]; then $reached = "true"; jmux_dependencies; fi
+        if [ $param = "update" ]; then $reached = "true"; jmux_update; fi
+        if [ $param = "rke" ]; then $reached = "true"; jmux_rke; fi
+        if [ $param = "help" ]; then $reached = "true"; jmux; fi
+        if [ $param = "close" ]; then $reached = "true"; jmux_close; fi
+        if [ $param = "connect" ]; then $reached = "true"; jmux_connect $#; fi
+        if [ $param = "command" ]; then $reached = "true"; jmux_command $#; fi
+        if [ $param = "migrate" ]; then $reached = "true"; jmux_migrate $#; fi
+        if [ $param = "ssh_copy_id" ]; then $reached = "true"; jmux_ssh_copy_id $#; fi
+        if [ $reached = "true" ]; then echo ""; else jmux; fi
+    fi
+}
+function jmuxdependencies() {
+    sudo apt install curl sshpass tmux ssh-askpass ssh_copy_id git -y
+}
+function jmuxupdate(){
+    # Define the line to check for
+    line_to_check="source ~/jmux.sh"
+    # Check if the line is already in ~/.bashrc
+    if grep -qF "$line_to_check" ~/.bashrc; then
+        echo "The line is already in ~/.bashrc."
+    else
+        # Append the line to ~/.bashrc if it's not present
+        echo "$line_to_check" >> ~/.bashrc
+        echo "Added the line to ~/.bashrc."
+    fi
+    curl -o ~/jmux.sh https://raw.githubusercontent.com/jabl3s/jmux/main/jmux.sh && source ~/.bashrc
+    }
+function jmux_rke(){
+        # Specify the path to the YAML file
+        yaml_file="~/jmuxrkeconfig.yaml"
+        # Prompt the user for the number of servers
+        read -p "Enter the number of servers you want to cluster (master=1 + workers>=1): " server_count
+        read -p "Enter the user thats on both master and workers" host_user
+        # Check if the YAML file exists; if not, create it with initial content
+        if [ ! -f "$yaml_file" ]; then
+            rm -R ~/jmuxrkeconfig.yaml
+        fi
+        echo "ssh_key_path: ~/.ssh/id_rsa" > "$yaml_file"
+        echo "nodes:" >> "$yaml_file"
+        # Loop to generate the server blocks and append them to the YAML file
+        for ((i=1; i<=$server_count; i++)); do
+            read -p "Enter the address for HOST_$i: " host_address
+            echo "  - address: $host_address" >> "$yaml_file"
+            echo "    user: ${host_user}" >> "$yaml_file"
+            echo "    role:" >> "$yaml_file"
+            echo "      - worker" >> "$yaml_file"
+        done
+        echo "YAML content has been updated in $yaml_file."
+    }
+function jmuxclose() { #USE LIKE: jmuxclose
     tmux kill-session -t jsession
 }
-function jmuxconnect() {
+function jmuxconnect() { #USE LIKE: jmuxconnect user@ip..user@ip -ssh_copy_id
     local option_ssh_copy_id=false
-    if [ $# -ge 3 ]; then
-        local username="$1"
-        local password="$2"
-        shift 2
+    if [ $# -lt 1 ] && [ $number -gt 4 ]; then
+        echo "Atleast one user@ip and up to four for typical screen vertical space limits..."
+        echo "...as well as to prevent loops in this command from being too large."
+        echo "e.g.1. jmux connect user@ip" 
+        echo "e.g.2. jmux connect user@ip user@ip user@ip user@ip" 
+    else
+        read -p "Enter the password being used on all these servers:" password
         for arg in "$@"; do
-            if [ "$arg" = "-ssh_copy_id" ]; then
-                option_ssh_copy_id=true
-                break
-            fi
+            if [ "$arg" = "-ssh_copy_id" ]; then option_ssh_copy_id=true; break; fi
         done
-    else
-        echo "Ideally give ssh_username, ssh_pass then as many ssh_ip you want"
+        if [ "$option_ssh_copy_id" = true ]; then
+            for ip in "$@"; do
+                sshpass -p "$password" ssh-copy-id -i ~/.ssh/id_rsa.pub $ip
+                echo "$ip"
+            done
+            echo "ssh pub keys copied to servers above with credentials provided, quitting..."   
+        else
+            tmux new-session -d -s jsession
+            for ip in "$@"; do
+                tmux split-window -v "sshpass -p $password ssh $ip"
+                tmux select-layout even-vertical
+            done
+            tmux attach-session -t jsession:0.0
     fi
-    if [ "$option_ssh_copy_id" = true ]; then
-        for ip in "$@"; do
-            sshpass -p "$password" ssh-copy-id -i ~/.ssh/id_rsa.pub $username@$ip
-            echo "$ip"
-        done
-        echo "ssh pub keys copied to servers above with credentials provided, quitting..."
-    elif [ $# -ge 1 ]; then
-        tmux new-session -d -s jsession
-        for ip in "$@"; do
-            tmux split-window -v "sshpass -p $password ssh $username@$ip"
-            tmux select-layout even-vertical
-        done
-        tmux attach-session -t jsession:0.0
-    else
-        echo "Provide atleast one ip address"
     fi
     }
-function jmuxcommand() {
+function jmuxcommand() { #USE LIKE: jmuxcommand x y..y
     local servercount="$1"
     shift
     local cmd="" 
@@ -63,14 +132,14 @@ function jmuxcommand() {
         done
     fi
 
-    function jmuxmigrate() {
+    function jmuxmigrate() { #USE LIKE: jmuxmigrate x y z -install_tmux
         local option_install_tmux=false
         if [ $# -ge 3 ]; then
             local username="$1"
             local password="$2"
             shift 2
             for arg in "$@"; do
-            if [ "$arg" = "-install" ]; then
+            if [ "$arg" = "-install_tmux" ]; then
                 option_install_tmux=true
                 break
             fi
@@ -89,4 +158,5 @@ function jmuxcommand() {
         echo "Provide atleast one ip address"
         fi
     }
-    }
+}
+
