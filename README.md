@@ -21,6 +21,8 @@ jmux connect ubuntu@192.168.1.1 ubuntu@192.168.1.2 ubuntu@192.168.1.3 ubuntu@192
 jmux command 4 echo "wassup from tmux"    
 ![Alt text](/assets/images/image-1.png)  
   
+As you can see I have one remote machine "Jtop", ssh-ing into 4 different servers, all with a pi username same password across these four servers. jmux commands can only be carried out in the first pane i.e. your remote machine, navigate to other panes one by one with tmux navigation keys ((Ctrl+B then the arrow up/down key)) to run commands per server, nav back to the first pane which is default after a connect call is made to run commands across all other panes except your first pane with something like """jmux command [number_of_server_panes_excluding_remote_machine_top_pane] (so in above image 4 not 5 is supplied followed by) desired_server_command"""
+  
 
 
 
