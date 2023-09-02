@@ -1,7 +1,7 @@
 # jmux - ((tmux wrapper))  
 Current limitations are on the amount of tmux panes (not windows) you can fit verticaly set to four.  
 Also jmux itself only takes a max of ten parameters. Caution using jmux command better to syncronise panes...   
-  
+((Tmux pane navigation is Ctrl+B the arrow key))  
   
 ## To install jmux run...  
 ### ...this only once to add the required line to your ~./bashrc:  
