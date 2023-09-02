@@ -52,7 +52,7 @@ function jmuxupdate(){
         echo "Added the line to ~/.bashrc."
     fi
     curl -o ~/jmux https://raw.githubusercontent.com/jabl3s/jmux/main/jmux.sh && source ~/.bashrc
-    }
+}
 function jmux_rke(){
         # Specify the path to the YAML file
         yaml_file="~/jmuxrkeconfig.yaml"
@@ -74,7 +74,7 @@ function jmux_rke(){
             echo "      - worker" >> "$yaml_file"
         done
         echo "YAML content has been updated in $yaml_file."
-    }
+}
 function jmuxclose() { #USE LIKE: jmuxclose
     tmux kill-session -t jsession
 }
@@ -103,9 +103,9 @@ function jmuxconnect() { #USE LIKE: jmuxconnect user@ip..user@ip -ssh_copy_id
                 tmux select-layout even-vertical
             done
             tmux attach-session -t jsession:0.0
+        fi
     fi
-    fi
-    }
+}
 function jmuxcommand() { #USE LIKE: jmuxcommand x y..y
     local servercount="$1"
     shift
@@ -131,8 +131,7 @@ function jmuxcommand() { #USE LIKE: jmuxcommand x y..y
             fi
         done
     fi
-    }
-
+}
 function jmuxmigrate() { #USE LIKE: jmuxmigrate x y z -install_tmux
     local option_install_tmux=false
     if [ $# -e 1 ]; then
@@ -145,5 +144,5 @@ function jmuxmigrate() { #USE LIKE: jmuxmigrate x y z -install_tmux
     else
         echo "TRY::: jmux migrate user@ip"
     fi
-    }
+}
 
