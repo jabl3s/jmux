@@ -2,7 +2,7 @@
 # Declare an associative array to store key-value pairs
 declare -A command_descriptions
 # Define the key-value pairs (commands as keys and descriptions as values)
-command_descriptions["connect"]="Replace 'ssh user@ip' with 'jmux connect user@ip user@ip user@ip user@ip' (limited to four ssh sessions.)"
+command_descriptions["connect"]="Replace 'ssh user@ip' with 'jmux connect user@ip user@ip user@ip user@ip' (limited up to four ssh sessions.)"
 command_descriptions["disconnect"]="All ssh connections end and jmux session ends, returning shell to normal. Now provide all user@ip to jmux connect to start again."
 command_descriptions["command"]="[number_of_ssh] ...leave blank to send ctrl+c, ...pipe password in for sudo commands, see example of this in read me."
 command_descriptions["hide"]="Runs all active ssh sessions in background, reconnect with just 'jmux connect' do not provide user@ip unless jmux disconnect was run, otherwise buggy gui."
