@@ -33,18 +33,17 @@ function jmux_print_prompt() {
 function jmux() {
     if [ $# -lt 1 ] || [ $# -gt 10 ]; then
         echo ""
-        printf "%*s\n" "$(tput cols)" | tr ' ' "="
-        echo "JMUX is a TMUX wrapper, see uses below" 
-        echo ""
-        jmux_print_prompt connect commant hide disconnect
-        echo ""
+        printf "%*s\n\n" "$(tput cols)" | tr ' ' "="
+        printf "JMUX is a TMUX wrapper, see uses below\n\n" 
+        jmux_print_prompt connect command hide disconnect
+        printf "\n\n"
         jmux_print_prompt dependencies update
-        echo ""
+        printf "\n\n"
         jmux_print_prompt more
         echo "."
         echo "."
         echo "."
-        printf "%*s\n" "$(tput cols)" | tr ' ' "="
+        printf "%*s\n\n" "$(tput cols)" | tr ' ' "="
     else
         local param="$1"
         shift
