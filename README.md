@@ -1,6 +1,7 @@
-# JMUX - TMUX wrapper 
+# JMUX - TMUX wrapper  
+### Tmux pane navigation is Ctrl+B the arrow key  
+### If in doubt, keep spamming "exit" command into any/all shell prompts after calling jmux connect  
 - Do not use "ssh user@ip" anymore! Single ssh commands fail if connection is lost to server from remote machine, however, JMUX/TMUX perssists ssh sessions after unwated connection loss, simply replace "ssh user@ip" with "jmux connect user@ip" and after having run jmux connect its only terminated after a "jmux disconnect" is called. Also run as many as upto four ssh sessions in the same window at once with "jmux connect user@ip1 user@ip2 user@ip3 user@ip4" so long its the same username password on all ssh connections...  
-### ((Tmux pane navigation is Ctrl+B the arrow key))  
   
      
 Current limitations are on the amount of tmux panes (not windows) you can fit verticaly set to four.  

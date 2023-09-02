@@ -51,7 +51,7 @@ function jmux() {
         if [ $param = "connect" ]; then $reached = "true"; jmux_connect "$@"; fi
         if [ $param = "command" ]; then $reached = "true"; jmux_command "$@"; fi
         if [ $param = "hide" ]; then $reached = "true"; jmux_hide; fi
-        if [ $param = "close" ]; then $reached = "true"; jmux_disconnect; fi
+        if [ $param = "disconnect" ]; then $reached = "true"; jmux_disconnect; fi
         if [ $param = "dependencies" ]; then $reached = "true"; jmux_dependencies; fi
         if [ $param = "update" ]; then $reached = "true"; jmux_update; fi
         if [ $param = "migrate" ]; then $reached = "true"; jmux_migrate "$@"; fi
