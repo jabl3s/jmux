@@ -34,7 +34,7 @@ function jmux() {
     if [ $# -lt 1 ] || [ $# -gt 10 ]; then
         echo ""
         printf "%*s\n" "$(tput cols)" | tr ' ' "="
-        printf "\nJMUX is a TMUX wrapper, see uses below \n" 
+        printf "\nJMUX is a TMUX wrapper, see uses below \n\n" 
         jmux_print_prompt connect command hide disconnect
         printf "\n\n"
         jmux_print_prompt dependencies update
