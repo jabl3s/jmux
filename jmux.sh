@@ -3,9 +3,9 @@
 declare -A command_descriptions
 # Define the key-value pairs (commands as keys and descriptions as values)
 command_descriptions["connect"]="Replace 'ssh user@ip' with 'jmux connect user@ip user@ip user@ip user@ip' (limited up to four ssh sessions.)"
-command_descriptions["disconnect"]="All ssh connections end and jmux session ends, returning shell to normal. Now provide all user@ip to jmux connect to start again."
+command_descriptions["kill"]="All ssh connections and jmux session ends, run if jmux ui is buggy."
 command_descriptions["command"]="[number_of_ssh] ...leave blank to send ctrl+c, ...pipe password in for sudo commands, see example of this in read me."
-command_descriptions["hide"]="Runs all active ssh sessions in background, reconnect with just 'jmux connect' do not provide user@ip unless jmux disconnect was run, otherwise buggy gui."
+command_descriptions["hide"]="Runs all active ssh sessions in background, reconnect with just 'jmux connect' do not provide user@ip unless jmux kill was run, otherwise buggy gui."
 command_descriptions["dependencies"]="Run this to get everything needed for jmux to work)"
 command_descriptions["update"]="Gets the latest jmux version from jabl3s git"
 command_descriptions["more"]="Extend this prompt with more commands and additional information like current the limitations of jmux"
@@ -35,7 +35,7 @@ function jmux() {
         echo ""
         printf "%*s\n" "$(tput cols)" | tr ' ' "="
         printf "\nJMUX is a TMUX wrapper, see uses below \n\n" 
-        jmux_print_prompt connect
+        jmux_print_prompt connect kill
         printf "\n\n"
         jmux_print_prompt dependencies update
         printf "\n\n"
@@ -51,7 +51,7 @@ function jmux() {
         if [ "$param" = "connect" ]; then reached="true"; jmux_connect "$@"; fi
         if [ "$param" = "command" ]; then reached="true"; jmux_command "$@"; fi
         if [ "$param" = "hide" ]; then reached="true"; jmux_hide; fi
-        if [ "$param" = "disconnect" ]; then reached="true"; jmux_disconnect; fi
+        if [ "$param" = "kill" ]; then reached="true"; jmux_kill; fi
         if [ "$param" = "dependencies" ]; then reached="true"; jmux_dependencies; fi
         if [ "$param" = "update" ]; then reached="true"; jmux_update; fi
         if [ "$param" = "migrate" ]; then reached="true"; jmux_migrate "$@"; fi
@@ -67,7 +67,7 @@ function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip
         sleep 3
         tmux attach-session -t jsession:0.0
     elif [ $# -lt 1 ] || [ $# -gt 4 ]; then   
-        echo "\nNo current session active to connect to..."
+        printf "\nNo current session active to connect to..."
         echo "Start a jmux connect session with at least one input of user@ip (up to limmit of four)"
         echo "Min: jmux connect user@ip" 
         echo "Max: jmux connect user@ip1 user@ip2 user@ip3 user@ip4" 
@@ -110,12 +110,11 @@ function jmux_command() { #USE LIKE: jmux_command x y..y
 function jmux_hide() { #USE LIKE: jmux_hide 
     tmux detach-client
 }
-function jmux_disconnect() { #USE LIKE: jmux_disconnect
+function jmux_kill() { #USE LIKE: jmux_kill
     tmux kill-session -t jsession
 }
 function jmux_dependencies() {
-    sudo apt update -y
-    sudo apt install curl sshpass tmux ssh-askpass git openssh-client -y
+    sudo apt install curl sshpass tmux ssh-askpass git -y
 }
 function jmux_update(){
     # Define the line to check for
@@ -177,7 +176,7 @@ function jmux_ssh_copy_id(){
     fi
 }
 function jmux_more(){
-    jmux_print_prompt disconnect hide command rke migrate ssh_copy_id
+    jmux_print_prompt kill hide command rke migrate ssh_copy_id
     printf "%*s\n" "$(tput cols)" | tr ' ' "="
     echo "Unlike ssh commands, jmux can still keep ssh sessions alive after lost connection"
     echo "Just reconnect to any lost session or from a jmux hide call with an empty jmux connect"
