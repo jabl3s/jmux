@@ -3,13 +3,13 @@ function jmux_print_prompt(){
     local start="$1"
     local finish="$2"
     local command_width=14
-    local description_width=($(tput cols)-command_width)
+    local description_width=($(tput cols)-$command_width)
     for ((i = "$start"; i < "$finish"; i++)); do #for ((i = 0; i < ${#commands[@]}; i++)); do
         command="${commands[i]}"
         description="${descriptions[i]}"
-        local descriptionlength=${#description}
-        for ((trunkstart = 0; trunkstart < descriptionlength; trunkstart += description_width)); do
-            local truncated_part="${description:trunkstart:(trunkstart+description_width)}"
+        local descriptionlength="${#description}"
+        for ((trunkstart = 0; trunkstart < $descriptionlength; trunkstart += $description_width)); do
+            local truncated_part="${description:$trunkstart:($trunkstart+$description_width)}"
             if [ $trunkstart = 0 ]; then
                 printf "jmux %-*s %s\n" "$command_width" "$command:" "$truncated_part"
             else
@@ -43,7 +43,7 @@ descriptions=( \
 function jmux() {
     if [ $# -lt 1 ] || [ $# -gt 10 ]; then
         echo ""
-        echo "$(tput cols)" "======================================================================"
+        printf "$(tput cols)" "="
         echo "JMUX is a TMUX wrapper, see uses below" 
         echo ""
         jmux_print_prompt 1 4
@@ -54,7 +54,7 @@ function jmux() {
         echo "."
         echo "."
         echo "."
-        echo "======================================================================"
+        printf $(tput cols) "="
     else
         local param="$1"
         shift
@@ -90,7 +90,7 @@ function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip -ssh_copy_id
         jmux_show
     fi
 }
-function jmux_command() { #USE LIKE: jmuxcommand x y..y
+function jmux_command() { #USE LIKE: jmux_command x y..y
     local servercount="$1"
     shift
     local cmd="" 
@@ -98,20 +98,12 @@ function jmux_command() { #USE LIKE: jmuxcommand x y..y
         cmd="$cmd $word"
     done
     if [ -z "$cmd" ]; then
-        for ((i=1; ; i++)); do
+        for ((i=1; i<= $server_count; i++)); do
             tmux send-keys -t "jsession:0.$i" "" C-c
-            if [ $i -eq $servercount ]; then
-                break
-            fi
         done
     else
-        for ((i=1; ; i++)); do
+        for ((i=1; i<= $server_count; i++)); do
             tmux send-keys -t "jsession:0.$i" "$cmd" C-m
-            # Add a break condition if needed
-            # For example, to stop after 10 iterations
-            if [ $i -eq $servercount ]; then
-                break
-            fi
         done
     fi
 }
