@@ -1,19 +1,48 @@
 #!/bin/bash
+commands=( \
+"connect" \
+"command" \
+"hide" \
+"disconnect" \
+"dependencies" \
+"update" \
+"more" \
+"rke" \
+"migrate" \
+"ssh_copy_id")
+descriptions=( \
+"user@ip user@ip user@ip user@ip (limmited to four tmux ssh panes at a time.)" \
+"[must_provide_number_of_panes] ...then leave blank to send ctrl+c to number of panes, ...pipe password in for sudo commands, see example of this in read me." \
+"(jmux hide keeps ssh panes active, reconnect with empty jmux connect" \
+"(All ssh panes connections end and jmux session ends, i.e. returning the console back to normal)" \
+"(after first ever jmux.sh download run this to get everything needed for jmux to work)" \
+"(gets the latest jmux from jabl3s git)" \
+"(Extend this prompt with more commands and additional info like current the limitations of jmux)" \
+"(work in progress)" \
+"user@ip (work in progress)" \
+"user@ip user@ip user@ip... (work in progress)")
 function jmux() {
     if [ $# -lt 1 ] || [ $# -gt 10 ]; then
         echo ""
         echo "======================================================================"
         echo "JMUX is a TMUX wrapper, see uses below" 
         echo ""
-        echo "jmux connect      user@ip user@ip user@ip user@ip (limmited to four tmux ssh panes at a time.)"
-        echo "jmux command      [must_provide_number_of_panes] ...then leave blank to send ctrl+c to number of panes, ...pipe password in for sudo commands, see example of this in read me."
-        echo "jmux hide         (jmux hide keeps ssh panes active, reconnect with empty jmux connect"               
-        echo "jmux disconnect   (All ssh panes connections end and jmux session ends, i.e. returning the console back to normal)"
+        # Iterate over the arrays and format the output
+        for ((i = 0; i < 4; i++)); do #for ((i = 0; i < ${#commands[@]}; i++)); do
+            command="${commands[i]}"
+            description="${descriptions[i]}"
+            # Use printf to format the output with columns
+            printf "jmux %-10s %s\n" "$command:" "$description"
+        done
         echo ""
-        echo "jmux dependencies (after first ever jmux.sh download run this to get everything needed for jmux to work)"
-        echo "jmux update       (gets the latest jmux from jabl3s git)"
+        for ((i = 4; i < 6; i++)); do #for ((i = 0; i < ${#commands[@]}; i++)); do
+            command="${commands[i]}"
+            description="${descriptions[i]}"
+            # Use printf to format the output with columns
+            printf "jmux %-10s %s\n" "$command:" "$description"
+        done
         echo ""
-        echo "jmux more         (Extend this prompt with more commands and additional info like current the limitations of jmux)"
+        printf "jmux %-10s %s\n" "$command[6]:" "$description[6]"
         echo "."
         echo "."
         echo "."
@@ -151,20 +180,23 @@ function jmux_ssh_copy_id(){
     fi
 }
 function jmux_more(){
-        echo "jmux migrate      user@ip (work in progress)"
-        echo "jmux rke          (work in progress)"
-        echo "jmux ssh_copy_id  user@ip user@ip user@ip... (work in progress)"
-        echo "================================================================="
-        echo "Unlike ssh commands, jmux can still keep ssh sessions alive"
-        echo "even without connection and stays active until jmux close is called."
-        echo "Just reconnect to any lost session or from a jmux hide call with an empty jmux connect"
-        echo ""
-        echo "jmux function itself can take up to 10 parameters max" 
-        echo "if you need more, for example, when using jmux command, "
-        echo "consider making the whole command a string of one parameter"
-        echo "e.g. jmux command 1 pwd && ls -a "
-        echo "becomes three jmux parameters instead of six by using quotes around the 'sent' command..."
-        echo "jmux command 1 'pwd && ls -a'"
-        echo ""
+    for ((i = 7; i < ${#commands[@]}; i++)); do
+        command="${commands[i]}"
+        description="${descriptions[i]}"
+        # Use printf to format the output with columns
+        printf "jmux %-10s %s\n" "$command:" "$description"
+    done
+    echo "================================================================="
+    echo "Unlike ssh commands, jmux can still keep ssh sessions alive"
+    echo "even without connection and stays active until jmux close is called."
+    echo "Just reconnect to any lost session or from a jmux hide call with an empty jmux connect"
+    echo ""
+    echo "jmux function itself can take up to 10 parameters max" 
+    echo "if you need more, for example, when using jmux command, "
+    echo "consider making the whole command a string of one parameter"
+    echo "e.g. jmux command 1 pwd && ls -a "
+    echo "becomes three jmux parameters instead of six by using quotes around the 'sent' command..."
+    echo "jmux command 1 'pwd && ls -a'"
+    echo ""
 }
 
