@@ -4,9 +4,9 @@ Also jmux itself only takes a max of thirty parameters.
 
 
 ## To install jmux run...
-### this only once to add the required line to your ~./bashrc:
+### ...this only once to add the required line to your ~./bashrc:
 echo "source ~/jmux.sh" >> ~/.bashrc
-### then this as many times you like to initial install jmux:
+### ...then this as many times you like to initial install jmux:
 curl -o ~/jmux.sh https://raw.githubusercontent.com/jabl3s/jmux/main/jmux.sh && source ~/.bashrc && jmux  
 ### Note, after doing the above two commands once now the shortcut below is available to do the same:
 jmux update
