@@ -34,13 +34,13 @@ function jmux() {
         if [ $param = "command" ]; then $reached = "true"; jmux_command $#; fi
         if [ $param = "migrate" ]; then $reached = "true"; jmux_migrate $#; fi
         if [ $param = "ssh_copy_id" ]; then $reached = "true"; jmux_ssh_copy_id $#; fi
-        if [ $reached = "true" ]; then echo ""; else jmux; fi
+        if [ $reached = "true" ]; then echo ""; else echo ""; fi
     fi
 }
-function jmuxdependencies() {
+function jmux_dependencies() {
     sudo apt install curl sshpass tmux ssh-askpass ssh_copy_id git -y
 }
-function jmuxupdate(){
+function jmux_update(){
     # Define the line to check for
     line_to_check="source ~/jmux"
     # Check if the line is already in ~/.bashrc
@@ -75,10 +75,10 @@ function jmux_rke(){
         done
         echo "YAML content has been updated in $yaml_file."
 }
-function jmuxclose() { #USE LIKE: jmuxclose
+function jmux_close() { #USE LIKE: jmuxclose
     tmux kill-session -t jsession
 }
-function jmuxconnect() { #USE LIKE: jmuxconnect user@ip..user@ip -ssh_copy_id
+function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip -ssh_copy_id
     local option_ssh_copy_id=false
     if [ $# -lt 1 ] && [ $number -gt 4 ]; then
         echo "Atleast one user@ip and up to four for typical screen vertical space limits..."
@@ -106,7 +106,7 @@ function jmuxconnect() { #USE LIKE: jmuxconnect user@ip..user@ip -ssh_copy_id
         fi
     fi
 }
-function jmuxcommand() { #USE LIKE: jmuxcommand x y..y
+function jmux_command() { #USE LIKE: jmuxcommand x y..y
     local servercount="$1"
     shift
     local cmd="" 
@@ -132,7 +132,7 @@ function jmuxcommand() { #USE LIKE: jmuxcommand x y..y
         done
     fi
 }
-function jmuxmigrate() { #USE LIKE: jmuxmigrate x y z -install_tmux
+function jmux_migrate() { #USE LIKE: jmuxmigrate x y z -install_tmux
     local option_install_tmux=false
     if [ $# -e 1 ]; then
         read -p "Enter the password being used on all these servers:" password
