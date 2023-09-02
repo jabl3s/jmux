@@ -17,7 +17,7 @@ jmux update
 - Use "exit" command to terminate any ssh sessions.  
 jmux connect ubuntu@192.168.1.1 ubuntu@192.168.1.2 ubuntu@192.168.1.3 ubuntu@192.168.1.4  
   
-![Alt text](/assets/images/jmuxdemo.gif) 
+![Alt text](/assets/images/jmuxdemo2.gif) 
 
 
 
