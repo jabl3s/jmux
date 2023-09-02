@@ -100,7 +100,7 @@ function jmux_hide() { #USE LIKE: jmux_hide
     tmux detach-client
 }
 function jmux_show() { #USE LIKE: jmux_show
-    tmux attach-session -t jsession:0.0
+    tmux attach-session -t jsession:0.1
 }
 function jmux_disconnect() { #USE LIKE: jmux_disconnect
     tmux kill-session -t jsession
