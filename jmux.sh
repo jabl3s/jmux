@@ -73,14 +73,13 @@ function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip
         read -s -p "Enter the password being used on all these servers:" serverpass  
         # Create a new tmux session named "jsession"
         tmux new-session -d -s jsession
-        # Attach to the session
-        tmux attach-session -t jsession
         # Create a new window named "jwindow" for the first SSH connection
-        #tmux new-window -n jwindow "sshpass -p $serverpass ssh $1"
+        tmux new-window -n jwindow "sshpass -p $serverpass ssh $1"
         # Attach to the "jwindow" window
-        #tmux attach-session -t jsession:jwindow
+        # Create vertical splits for Hosts 2, 3, and 4
+        tmux select-window -t jsession:jwindow
         # Shift the arguments to remove the first IP address
-        #shift
+        shift
         # Loop through the remaining IP addresses and create vertical splits
         for ip in "$@"; do
             tmux split-window -v "sshpass -p $serverpass ssh $ip"
