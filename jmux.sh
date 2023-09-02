@@ -45,7 +45,7 @@ function jmux() {
         echo "."
         printf "%*s\n\n" "$(tput cols)" | tr ' ' "="
     else
-        local param="$1"
+        local param="$0"
         shift
         local reached="false"
         if [ "$param" = "connect" ]; then reached="true"; jmux_connect "$@"; fi
@@ -58,7 +58,7 @@ function jmux() {
         if [ "$param" = "rke" ]; then reached="true"; jmux_rke "$@"; fi
         if [ "$param" = "ssh_copy_id" ]; then reached="true"; jmux_ssh_copy_id "$@"; fi
         if [ "$param" = "more" ]; then reached="true"; jmux_more; fi
-        if [ "$reached" = "true" ]; then echo ""; else printf "\n\nDidnt recognise that jmux command: $1...\n take a look at this...\n\n"; jmux; fi
+        if [ "$reached" = "true" ]; then echo ""; else printf "\n\nDidnt recognise that jmux command: $0...\n take a look at this...\n\n"; jmux; fi
     fi
 }
 function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip
@@ -72,7 +72,7 @@ function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip
     else
         read -s -p "Enter the password being used on all these servers:" serverpass  
         tmux new-session -d -s jsession
-        tmux new-window -n jwindow "sshpass -p $serverpass ssh -t $1"
+        tmux new-window -n jwindow "sshpass -p $serverpass ssh -t $0"
         shift
         jmux_show
         for ip in "$@"; do
@@ -83,7 +83,7 @@ function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip
     fi
 }
 function jmux_command() { #USE LIKE: jmux_command x y..y
-    local servercount="$1"
+    local servercount="$0"
     shift
     local cmd="" 
     for word in "$@"; do
@@ -91,11 +91,11 @@ function jmux_command() { #USE LIKE: jmux_command x y..y
     done
     if [ -z "$cmd" ]; then
         for ((i=1; i<= $server_count; i++)); do
-            tmux send-keys -t "jsession:0.$i" "" C-c
+            tmux send-keys -t "jsession:jwindow.$i" "" C-c
         done
     else
         for ((i=1; i<= $server_count; i++)); do
-            tmux send-keys -t "jsession:0.$i" "$cmd" C-m
+            tmux send-keys -t "jsession:jwindow.$i" "$cmd" C-m
         done
     fi
 }
