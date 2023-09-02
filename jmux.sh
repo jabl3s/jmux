@@ -13,7 +13,7 @@ function jmux_print_prompt(){
             if [ $trunkstart = 0 ]; then
                 printf "jmux %-*s %s\n" "$command_width" "$command:" "$truncated_part"
             else
-                printf "    " "%-${command_width}s %s\n" " " "${description:description_width}"
+                printf "%-${command_width}s %s\n" " " "${truncated_part}"
             fi
         done
     done
