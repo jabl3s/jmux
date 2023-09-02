@@ -12,21 +12,22 @@ command_descriptions["more"]="(Extend this prompt with more commands and additio
 command_descriptions["rke"]="(work in progress)"
 command_descriptions["migrate"]="user@ip (work in progress)"
 command_descriptions["ssh_copy_id"]="user@ip user@ip user@ip... (work in progress)"
-function jmux_print_prompt(){
-    local inputs="$@"
+function jmux_print_prompt() {
     local description_width=$(tput cols)-20
-    # Access and print the key-value pairs
-    for command in "${!command_descriptions[inputs]}"; do #"${!command_descriptions[@]}"
-        description="${command_descriptions[$command]}"
-        local descriptionlength="${#description}"
-        for ((trunkstart = 0; trunkstart < descriptionlength; trunkstart += description_width)); do
-            local truncated_part="${description:trunkstart:description_width}"
-            if [ $trunkstart = 0 ]; then
-                printf "jmux %-13s %s\n" "$command:" "$truncated_part"
-            else
-                printf "%-18s %s\n" " " "${truncated_part}"
-            fi
-        done
+    # Loop through provided commands
+    for command in "$@"; do
+        if [ -n "${command_descriptions[$command]}" ]; then
+            description="${command_descriptions[$command]}"
+            local descriptionlength="${#description}"
+            for ((trunkstart = 0; trunkstart < descriptionlength; trunkstart += description_width)); do
+                local truncated_part="${description:trunkstart:description_width}"
+                if [ $trunkstart = 0 ]; then
+                    printf "jmux %-13s %s\n" "$command:" "$truncated_part"
+                else
+                    printf "%-18s %s\n" " " "${truncated_part}"
+                fi
+            done
+        fi
     done
 }
 function jmux() {
@@ -35,7 +36,7 @@ function jmux() {
         printf "%*s\n" "$(tput cols)" | tr ' ' "="
         echo "JMUX is a TMUX wrapper, see uses below" 
         echo ""
-        jmux_print_prompt connect command hide disconnect
+        jmux_print_prompt connect commant hide disconnect
         echo ""
         jmux_print_prompt dependencies update
         echo ""
