@@ -96,7 +96,7 @@ function jmux_dependencies() {
 }
 function jmux_update(){
     # Define the line to check for
-    line_to_check="source ~/jmux.sh"
+    local line_to_check="source ~/jmux.sh"
     # Check if the line is already in ~/.bashrc
     if grep -qF "$line_to_check" ~/.bashrc; then
         echo "The line is already in ~/.bashrc."
