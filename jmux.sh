@@ -6,7 +6,7 @@ function jmux() {
         echo "JMUX is a TMUX wrapper, see uses below" 
         echo ""
         echo "jmux connect      user@ip user@ip user@ip user@ip (limmited to four tmux ssh panes at a time.)"
-        echo "jmux command      [number_of_panes] leave blank to send ctrl+c, pipe password in for sudo commands, see example of this in read me."
+        echo "jmux command      [must_provide_number_of_panes] ...then leave blank to send ctrl+c to number of panes, ...pipe password in for sudo commands, see example of this in read me."
         echo "jmux hide         (jmux hide keeps ssh panes active, reconnect with empty jmux connect"               
         echo "jmux disconnect   (All ssh panes connections end and jmux session ends, i.e. returning the console back to normal)"
         echo ""
