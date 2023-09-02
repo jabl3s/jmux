@@ -45,10 +45,11 @@ function jmux() {
         echo "."
         printf "%*s\n\n" "$(tput cols)" | tr ' ' "="
     else
+        shift
         local param="$0"
         shift
         local reached="false"
-        if [ "$param" = "connect" ]; then reached="true"; jmux_connect "$@"; fi
+        if [ "$param" = "connect" ]; then reached="true"; jmux_connect "$@"; echo "$@"; fi
         if [ "$param" = "command" ]; then reached="true"; jmux_command "$@"; fi
         if [ "$param" = "hide" ]; then reached="true"; jmux_hide; fi
         if [ "$param" = "disconnect" ]; then reached="true"; jmux_disconnect; fi
@@ -58,7 +59,7 @@ function jmux() {
         if [ "$param" = "rke" ]; then reached="true"; jmux_rke "$@"; fi
         if [ "$param" = "ssh_copy_id" ]; then reached="true"; jmux_ssh_copy_id "$@"; fi
         if [ "$param" = "more" ]; then reached="true"; jmux_more; fi
-        if [ "$reached" = "true" ]; then echo ""; else printf "\n\nDidnt recognise that jmux command: $0...\n take a look at this...\n\n"; jmux; fi
+        if [ "$reached" = "true" ]; then echo ""; else printf "\n\nDidnt recognise that jmux command: $param...\n take a look at this...\n\n"; jmux; fi
     fi
 }
 function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip
@@ -70,6 +71,7 @@ function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip
         echo "Min: jmux connect user@ip" 
         echo "Max: jmux connect user@ip1 user@ip2 user@ip3 user@ip4" 
     else
+        shift
         read -s -p "Enter the password being used on all these servers:" serverpass  
         tmux new-session -d -s jsession
         tmux new-window -n jwindow "sshpass -p $serverpass ssh -t $0"
@@ -83,6 +85,7 @@ function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip
     fi
 }
 function jmux_command() { #USE LIKE: jmux_command x y..y
+    shift
     local servercount="$0"
     shift
     local cmd="" 
