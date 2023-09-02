@@ -1,5 +1,5 @@
 # JMUX - TMUX wrapper 
-- Do not use "ssh user@ip" anymore! Single ssh commands fail if connection is lost to server from remote machine, however, JMUX/TMUX perssists ssh sessions after unwated connection loss, simply replace "ssh user@ip" with "jmux connect user@ip" and after having run jmux connect its only terminated after a "jmux disconnect" is called. Also run as many as upto four ssh sessions in the same window at once with "jmux connect user@ip user@ip user@ip user@ip" so long its the same username password on all ssh connections...  
+- Do not use "ssh user@ip" anymore! Single ssh commands fail if connection is lost to server from remote machine, however, JMUX/TMUX perssists ssh sessions after unwated connection loss, simply replace "ssh user@ip" with "jmux connect user@ip" and after having run jmux connect its only terminated after a "jmux disconnect" is called. Also run as many as upto four ssh sessions in the same window at once with "jmux connect user@ip1 user@ip2 user@ip3 user@ip4" so long its the same username password on all ssh connections...  
 ### ((Tmux pane navigation is Ctrl+B the arrow key))  
   
      
