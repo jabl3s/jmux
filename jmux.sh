@@ -72,12 +72,7 @@ function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip
     else
         read -s -p "Enter the password being used on all these servers:" serverpass  
         # Create a new tmux session named "jsession"
-        tmux new-session -d -s jsession
-        # Create a new window named "jwindow" for the first SSH connection
-        tmux new-window -n jwindow "sshpass -p $serverpass ssh $1"
-        # Attach to the "jwindow" window
-        # Create vertical splits for Hosts 2, 3, and 4
-        tmux select-window -t jsession:jwindow
+        tmux new-session -d -s jsession "sshpass -p $serverpass ssh $1"
         # Shift the arguments to remove the first IP address
         shift
         # Loop through the remaining IP addresses and create vertical splits
@@ -89,9 +84,7 @@ function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip
         # Enable pane synchronization
         tmux setw synchronize-panes on
         # Attach to the session
-        tmux attach-session -t jsession:jwindow.0
-        # Kill remote host tmux background window
-        tmux kill-window -t 0
+        tmux attach-session -t jsession:0.0
     fi
 }
 function jmux_command() { #USE LIKE: jmux_command x y..y
