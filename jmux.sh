@@ -35,7 +35,7 @@ function jmux() {
         echo ""
         printf "%*s\n" "$(tput cols)" | tr ' ' "="
         printf "\nJMUX is a TMUX wrapper, see uses below \n\n" 
-        jmux_print_prompt connect disconnect hide command
+        jmux_print_prompt connect
         printf "\n\n"
         jmux_print_prompt dependencies update
         printf "\n\n"
@@ -64,19 +64,22 @@ function jmux() {
 function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip
     if tmux has-session -t jsession 2>/dev/null; then
         jmux_show
-    elif [ $# -lt 1 ] && [ $number -gt 4 ]; then
-        echo "No current session to connect to..."
+    elif [ $# -lt 1 ] && [ $number -gt 4 ]; then   
+        echo "No current session active to connect to..."
         echo "Start a jmux connect session with at least one input of user@ip (up to limmit of four)"
         echo "Min: jmux connect user@ip" 
         echo "Max: jmux connect user@ip1 user@ip2 user@ip3 user@ip4" 
     else
         read -s -p "Enter the password being used on all these servers:" serverpass  
         tmux new-session -d -s jsession
-        for ip in "$@"; do
-            tmux split-window -v "sshpass -p $serverpass ssh -t $ip" && 
-        done
-        tmux select-layout even-vertical &&
+        tmux new-window -n jwindow "sshpass -p $serverpass ssh -t $1"
+        shift
         jmux_show
+        for ip in "$@"; do
+            tmux split-window -v "sshpass -p $serverpass ssh -t $ip"
+        done
+        tmux select-layout even-vertical
+        tmux setw synchronize-panes on
         fi
     fi
 }
@@ -101,7 +104,7 @@ function jmux_hide() { #USE LIKE: jmux_hide
     tmux detach-client
 }
 function jmux_show() { #USE LIKE: jmux_show
-    tmux attach-session -t jsession:0.1
+    tmux attach-session -t jsession:jwindow.0
 }
 function jmux_disconnect() { #USE LIKE: jmux_disconnect
     tmux kill-session -t jsession
@@ -169,10 +172,9 @@ function jmux_ssh_copy_id(){
     fi
 }
 function jmux_more(){
-    jmux_print_prompt rke migrate ssh_copy_id
+    jmux_print_prompt disconnect hide command rke migrate ssh_copy_id
     printf "%*s\n" "$(tput cols)" | tr ' ' "="
-    echo "Unlike ssh commands, jmux can still keep ssh sessions alive"
-    echo "even without connection and stays active until jmux close is called."
+    echo "Unlike ssh commands, jmux can still keep ssh sessions alive after lost connection"
     echo "Just reconnect to any lost session or from a jmux hide call with an empty jmux connect"
     echo ""
     echo "jmux function itself can take up to 10 parameters max" 
