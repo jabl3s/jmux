@@ -61,22 +61,23 @@ function jmux() {
         if [ $reached = "true" ]; then echo ""; else echo "\n\nDidnt recognise that jmux command take a look at this...\n\n"; jmux; fi
     fi
 }
-function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip -ssh_copy_id
+function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip
     if tmux has-session -t jsession 2>/dev/null; then
         jmux_show
     elif [ $# -lt 1 ] && [ $number -gt 4 ]; then
         echo "No current session to connect to..."
         echo "Start a jmux connect session with at least one input of user@ip (up to limmit of four)"
         echo "Min: jmux connect user@ip" 
-        echo "Max: jmux connect user@ip user@ip user@ip user@ip" 
+        echo "Max: jmux connect user@ip1 user@ip2 user@ip3 user@ip4" 
     else
         read -s -p "Enter the password being used on all these servers:" serverpass  
         tmux new-session -d -s jsession
         for ip in "$@"; do
-            tmux split-window -v "sshpass -p $serverpass ssh $ip"
-            tmux select-layout even-vertical
+            tmux split-window -v "sshpass -p $serverpass ssh -t $ip" && 
         done
+        tmux select-layout even-vertical &&
         jmux_show
+        fi
     fi
 }
 function jmux_command() { #USE LIKE: jmux_command x y..y
