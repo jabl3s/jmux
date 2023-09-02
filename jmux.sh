@@ -89,7 +89,9 @@ function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip
         # Enable pane synchronization
         tmux setw synchronize-panes on
         # Attach to the session
-        tmux attach-session -t jsession
+        tmux attach-session -t jsession:jwindow.0
+        # Kill remote host tmux background window
+        tmux kill-window -t jsession:0
     fi
 }
 function jmux_command() { #USE LIKE: jmux_command x y..y
