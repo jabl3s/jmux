@@ -10,7 +10,7 @@ function jmux_print_prompt(){
         local descriptionlength=${#description}
         for ((trunkstart = 0; trunkstart < descriptionlength; trunkstart += description_width)); do
             local truncated_part="${description:trunkstart:(trunkstart+description_width)}"
-            if [ $trunkstart -e 0 ]; then
+            if [ $trunkstart = 0 ]; then
                 printf "jmux %-*s %s\n" "$command_width" "$command:" "$truncated_part"
             else
                 printf "    " "%-${command_width}s %s\n" " " "${description:description_width}"
