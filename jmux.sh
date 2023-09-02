@@ -25,17 +25,71 @@ function jmux() {
         local param="$1"
         local reached="false"
         shift
-        if [ $param = "dependencies" ]; then $reached = "true"; jmux_dependencies; fi
-        if [ $param = "update" ]; then $reached = "true"; jmux_update; fi
-        if [ $param = "rke" ]; then $reached = "true"; jmux_rke; fi
-        if [ $param = "help" ]; then $reached = "true"; jmux; fi
-        if [ $param = "close" ]; then $reached = "true"; jmux_close; fi
         if [ $param = "connect" ]; then $reached = "true"; jmux_connect $#; fi
         if [ $param = "command" ]; then $reached = "true"; jmux_command $#; fi
+        if [ $param = "hide" ]; then $reached = "true"; jmux_hide; fi
+        if [ $param = "show" ]; then $reached = "true"; jmux_show; fi
+        if [ $param = "close" ]; then $reached = "true"; jmux_close; fi
+        if [ $param = "dependencies" ]; then $reached = "true"; jmux_dependencies; fi
+        if [ $param = "update" ]; then $reached = "true"; jmux_update; fi
         if [ $param = "migrate" ]; then $reached = "true"; jmux_migrate $#; fi
+        if [ $param = "rke" ]; then $reached = "true"; jmux_rke $#; fi
         if [ $param = "ssh_copy_id" ]; then $reached = "true"; jmux_ssh_copy_id $#; fi
+        if [ $param = "help" ]; then $reached = "true"; jmux; fi
         if [ $reached = "true" ]; then echo ""; else echo ""; fi
     fi
+}
+function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip -ssh_copy_id
+    local option_ssh_copy_id=false
+    if [ $# -lt 1 ] && [ $number -gt 4 ]; then
+        echo "Atleast one user@ip and up to four for typical screen vertical space limits..."
+        echo "...as well as to prevent loops in this command from being too large."
+        echo "e.g.1. jmux connect user@ip" 
+        echo "e.g.2. jmux connect user@ip user@ip user@ip user@ip" 
+    else
+        read -s -p "Enter the password being used on all these servers:" serverpass  
+        tmux new-session -d -s jsession
+        for ip in "$@"; do
+            tmux split-window -v "sshpass -p $serverpass ssh $ip"
+            tmux select-layout even-vertical
+        done
+        jmux_show
+    fi
+}
+function jmux_command() { #USE LIKE: jmuxcommand x y..y
+    local servercount="$1"
+    shift
+    local cmd="" 
+    for word in "$@"; do
+        cmd="$cmd $word"
+    done
+    if [ -z "$cmd" ]; then
+        for ((i=1; ; i++)); do
+            tmux send-keys -t "jsession:0.$i" "" C-c
+            if [ $i -eq $servercount ]; then
+                break
+            fi
+        done
+    else
+        for ((i=1; ; i++)); do
+            # You can add your commands here
+            tmux send-keys -t "jsession:0.$i" "$cmd" C-m
+            # Add a break condition if needed
+            # For example, to stop after 10 iterations
+            if [ $i -eq $servercount ]; then
+                break
+            fi
+        done
+    fi
+}
+function jmux_hide() { #USE LIKE: jmux_hide 
+    tmux detach-client
+}
+function jmux_show() { #USE LIKE: jmuxclose
+    tmux attach-session -t jsession:0.0
+}
+function jmux_close() { #USE LIKE: jmuxclose
+    tmux kill-session -t jsession
 }
 function jmux_dependencies() {
     sudo apt install curl sshpass tmux ssh-askpass ssh_copy_id git -y
@@ -75,63 +129,6 @@ function jmux_rke(){
         done
         echo "YAML content has been updated in $yaml_file."
 }
-function jmux_close() { #USE LIKE: jmuxclose
-    tmux kill-session -t jsession
-}
-function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip -ssh_copy_id
-    local option_ssh_copy_id=false
-    if [ $# -lt 1 ] && [ $number -gt 4 ]; then
-        echo "Atleast one user@ip and up to four for typical screen vertical space limits..."
-        echo "...as well as to prevent loops in this command from being too large."
-        echo "e.g.1. jmux connect user@ip" 
-        echo "e.g.2. jmux connect user@ip user@ip user@ip user@ip" 
-    else
-        read -p "Enter the password being used on all these servers:" password
-        for arg in "$@"; do
-            if [ "$arg" = "-ssh_copy_id" ]; then option_ssh_copy_id=true; break; fi
-        done
-        if [ "$option_ssh_copy_id" = true ]; then
-            for ip in "$@"; do
-                sshpass -p "$password" ssh-copy-id -i ~/.ssh/id_rsa.pub $ip
-                echo "$ip"
-            done
-            echo "ssh pub keys copied to servers above with credentials provided, quitting..."   
-        else
-            tmux new-session -d -s jsession
-            for ip in "$@"; do
-                tmux split-window -v "sshpass -p $password ssh $ip"
-                tmux select-layout even-vertical
-            done
-            tmux attach-session -t jsession:0.0
-        fi
-    fi
-}
-function jmux_command() { #USE LIKE: jmuxcommand x y..y
-    local servercount="$1"
-    shift
-    local cmd="" 
-    for word in "$@"; do
-        cmd="$cmd $word"
-    done
-    if [ -z "$cmd" ]; then
-        for ((i=1; ; i++)); do
-            tmux send-keys -t "jsession:0.$i" "" C-c
-            if [ $i -eq $servercount ]; then
-                break
-            fi
-        done
-    else
-        for ((i=1; ; i++)); do
-            # You can add your commands here
-            tmux send-keys -t "jsession:0.$i" "$cmd" C-m
-            # Add a break condition if needed
-            # For example, to stop after 10 iterations
-            if [ $i -eq $servercount ]; then
-                break
-            fi
-        done
-    fi
-}
 function jmux_migrate() { #USE LIKE: jmuxmigrate x y z -install_tmux
     local option_install_tmux=false
     if [ $# -e 1 ]; then
@@ -143,6 +140,17 @@ function jmux_migrate() { #USE LIKE: jmuxmigrate x y z -install_tmux
         echo "Assuming tmux installed on remote host ok..."
     else
         echo "TRY::: jmux migrate user@ip"
+    fi
+}
+function jmux_ssh_copy_id(){
+    if [ $# -lt 1 ] && [ $number -gt 4 ]; then
+        echo "Atleast one user@ip and up to four"
+    else
+        for ip in "$@"; do
+            sshpass -p "$password" ssh-copy-id -i ~/.ssh/id_rsa.pub $ip
+            echo "$ip"
+        done
+        echo "ssh pub keys copied to servers above with credentials provided, quitting..." 
     fi
 }
 
