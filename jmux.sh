@@ -2,13 +2,13 @@
 # Declare an associative array to store key-value pairs
 declare -A command_descriptions
 # Define the key-value pairs (commands as keys and descriptions as values)
-command_descriptions["connect"]="user@ip user@ip user@ip user@ip (limited to four tmux ssh panes at a time.)"
-command_descriptions["command"]="[must_provide_number_of_panes] ...then leave blank to send ctrl+c to number of panes, ...pipe password in for sudo commands, see example of this in read me."
-command_descriptions["hide"]="(jmux hide keeps ssh panes active, reconnect with empty jmux connect"
-command_descriptions["disconnect"]="(All ssh panes connections end and jmux session ends, i.e. returning the console back to normal)"
-command_descriptions["dependencies"]="(after first-ever jmux.sh download run this to get everything needed for jmux to work)"
-command_descriptions["update"]="(gets the latest jmux from jabl3s git)"
-command_descriptions["more"]="(Extend this prompt with more commands and additional info like current the limitations of jmux)"
+command_descriptions["connect"]="Basically: ssh user@ip user@ip user@ip user@ip (limited to four.)"
+command_descriptions["command"]="[number_of_ssh] ...leave blank to send ctrl+c, ...pipe password in for sudo commands, see example of this in read me."
+command_descriptions["hide"]="Runs all active ssh sessions in background, reconnect with jmux connect"
+command_descriptions["disconnect"]="All ssh connections end and jmux session ends, termination)"
+command_descriptions["dependencies"]="Run this to get everything needed for jmux to work)"
+command_descriptions["update"]="Gets the latest jmux version from jabl3s git"
+command_descriptions["more"]="Extend this prompt with more commands and additional information like current the limitations of jmux"
 command_descriptions["rke"]="(work in progress)"
 command_descriptions["migrate"]="user@ip (work in progress)"
 command_descriptions["ssh_copy_id"]="user@ip user@ip user@ip... (work in progress)"
