@@ -58,13 +58,13 @@ function jmux() {
         if [ $param = "rke" ]; then $reached = "true"; jmux_rke "$@"; fi
         if [ $param = "ssh_copy_id" ]; then $reached = "true"; jmux_ssh_copy_id "$@"; fi
         if [ $param = "more" ]; then $reached = "true"; jmux_more; fi
-        if [ $reached = "true" ]; then echo ""; else echo "\n\nDidnt recognise that jmux command take a look at this...\n\n"; jmux; fi
+        if [ $reached = "true" ]; then echo ""; else printf "\n\nDidnt recognise that jmux command take a look at this...\n\n"; jmux; fi
     fi
 }
 function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip
     if tmux has-session -t jsession 2>/dev/null; then
         jmux_show
-    elif [ $# -lt 1 ] && [ $number -gt 4 ]; then   
+    elif [ $# -lt 1 ] || [ $# -gt 4 ]; then   
         echo "No current session active to connect to..."
         echo "Start a jmux connect session with at least one input of user@ip (up to limmit of four)"
         echo "Min: jmux connect user@ip" 
@@ -160,7 +160,7 @@ function jmux_migrate() { #USE LIKE: jmuxmigrate x y z -install_tmux
     fi
 }
 function jmux_ssh_copy_id(){
-    if [ $# -lt 1 ] && [ $number -gt 4 ]; then
+    if [ $# -lt 1 ] || [ $# -gt 4 ]; then
         echo "Atleast one user@ip and up to four"
     else
         for ip in "$@"; do
