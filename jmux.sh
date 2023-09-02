@@ -63,7 +63,9 @@ function jmux() {
 }
 function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip
     if tmux has-session -t jsession 2>/dev/null; then
-        jmux_show
+        echo "Recconecting to un exited jmux session in 3 seconds..."
+        sleep 3
+        tmux attach-session -t jsession:0.0
     elif [ $# -lt 1 ] || [ $# -gt 4 ]; then   
         echo "\nNo current session active to connect to..."
         echo "Start a jmux connect session with at least one input of user@ip (up to limmit of four)"
