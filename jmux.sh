@@ -35,7 +35,7 @@ function jmux() {
         echo ""
         printf "%*s\n" "$(tput cols)" | tr ' ' "="
         printf "\nJMUX is a TMUX wrapper, see uses below \n\n" 
-        jmux_print_prompt connect command hide disconnect
+        jmux_print_prompt connect disconnect hide command
         printf "\n\n"
         jmux_print_prompt dependencies update
         printf "\n\n"
