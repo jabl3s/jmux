@@ -114,7 +114,8 @@ function jmux_disconnect() { #USE LIKE: jmux_disconnect
     tmux kill-session -t jsession
 }
 function jmux_dependencies() {
-    sudo apt install curl sshpass tmux ssh-askpass git -y
+    sudo apt update -y
+    sudo apt install curl sshpass tmux ssh-askpass git openssh-client -y
 }
 function jmux_update(){
     # Define the line to check for
