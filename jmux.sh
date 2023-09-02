@@ -179,7 +179,7 @@ function jmux_ssh_copy_id(){
 }
 function jmux_more(){
     jmux_print_prompt 7 ${#commands[@]}
-    echo "================================================================="
+    printf "%*s\n" "$(tput cols)" | tr ' ' "="
     echo "Unlike ssh commands, jmux can still keep ssh sessions alive"
     echo "even without connection and stays active until jmux close is called."
     echo "Just reconnect to any lost session or from a jmux hide call with an empty jmux connect"
