@@ -5,7 +5,7 @@ Current limmitations are on the amount of tmux panes (not windows) you can fit v
 ### Run this only once to add line to your ~./bashrc) 
 echo "source ~/jmux" >> ~/.bashrc
 ### Run this as many times you like to update the jmux wrapper)
-curl -o ~/jmux.sh https://raw.githubusercontent.com/jabl3s/jmux/main/jmux.sh && source ~/.bashrc  
+curl -o ~/jmux https://raw.githubusercontent.com/jabl3s/jmux/main/jmux.sh && source ~/.bashrc  
   
 ((Once installed this way you can shortcut to jmux update to do the above command))
 ## jmux command sudo command example)

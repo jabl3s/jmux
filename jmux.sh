@@ -42,7 +42,7 @@ function jmuxdependencies() {
 }
 function jmuxupdate(){
     # Define the line to check for
-    line_to_check="source ~/jmux.sh"
+    line_to_check="source ~/jmux"
     # Check if the line is already in ~/.bashrc
     if grep -qF "$line_to_check" ~/.bashrc; then
         echo "The line is already in ~/.bashrc."
@@ -51,7 +51,7 @@ function jmuxupdate(){
         echo "$line_to_check" >> ~/.bashrc
         echo "Added the line to ~/.bashrc."
     fi
-    curl -o ~/jmux.sh https://raw.githubusercontent.com/jabl3s/jmux/main/jmux.sh && source ~/.bashrc
+    curl -o ~/jmux https://raw.githubusercontent.com/jabl3s/jmux/main/jmux.sh && source ~/.bashrc
     }
 function jmux_rke(){
         # Specify the path to the YAML file
@@ -131,32 +131,19 @@ function jmuxcommand() { #USE LIKE: jmuxcommand x y..y
             fi
         done
     fi
-
-    function jmuxmigrate() { #USE LIKE: jmuxmigrate x y z -install_tmux
-        local option_install_tmux=false
-        if [ $# -ge 3 ]; then
-            local username="$1"
-            local password="$2"
-            shift 2
-            for arg in "$@"; do
-            if [ "$arg" = "-install_tmux" ]; then
-                option_install_tmux=true
-                break
-            fi
-        done
-        else
-            echo "Ideally give ssh_username, ssh_pass, ssh_ip"
-        fi
-        if [ "$option_install_tmux" = true ]; then
-        elif [ $# -ge 1 ]; then
-            tmux attach-session -t jsession:0.0
-            tmux new-window -v -n jmigrate "sshpass -p $password ssh $username@$ip"
-            tmux send-keys -t "jsession:jmigrate" "echo $password | sudo -S apt-get install -y tmux" C-m
-            tmux kill-window -t "jsession:jmigrate"
-            echo "Assuming tmux installed on remote host ok..."
-        else
-        echo "Provide atleast one ip address"
-        fi
     }
-}
+
+function jmuxmigrate() { #USE LIKE: jmuxmigrate x y z -install_tmux
+    local option_install_tmux=false
+    if [ $# -e 1 ]; then
+        read -p "Enter the password being used on all these servers:" password
+        tmux attach-session -t jsession:0.0
+        tmux new-window -v -n jmigrate "sshpass -p $password ssh $ip"
+        tmux send-keys -t "jsession:jmigrate" "echo $password | sudo -S apt-get install -y tmux" C-m
+        tmux kill-window -t "jsession:jmigrate"
+        echo "Assuming tmux installed on remote host ok..."
+    else
+        echo "TRY::: jmux migrate user@ip"
+    fi
+    }
 
