@@ -1,9 +1,6 @@
 #!/bin/bash
 function jmux() {
     if [ $# -lt 1 ]; then
-        echo "Unlike ssh commands, jmux connect can still keep ssh sessions alive without connection..."
-        echo "...just reconnect with jmux show"
-        echo ""
         echo ""
         echo "======================================================================"
         echo "JMUX is a TMUX wrapper, see uses below" 
@@ -21,6 +18,9 @@ function jmux() {
         echo "jmux ssh_copy_id  user@ip user@ip user@ip... (work in progress)"
         echo "jmux help"
         echo "======================================================================"
+        echo ""
+        echo "Unlike ssh commands, jmux connect can still keep ssh sessions alive without connection..."
+        echo "...just reconnect with jmux show"
     else
         local param="$1"
         local reached="false"
