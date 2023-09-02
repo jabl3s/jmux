@@ -12,7 +12,7 @@ curl -o ~/jmux.sh https://raw.githubusercontent.com/jabl3s/jmux/main/jmux.sh && 
 jmux update  
 ## jmux command: sudo command example  
 jmux command [number_of_panes] 'echo "yoursudoerpassword" | sudo -S apt get update'  
-## jmux connect: simple example)  
+## jmux connect: simple example  
 jmux connect ubuntu@192.168.1.1 ubuntu@192.168.1.2 ubuntu@192.168.1.3 ubuntu@192.168.1.4  
 ((prompt appears for the password of the alias user on all servers listed in jmux connect command))  
 jmux command 4 echo "wassup from tmux"    
