@@ -80,7 +80,6 @@ function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip
         done
         tmux select-layout even-vertical
         tmux setw synchronize-panes on
-        fi
     fi
 }
 function jmux_command() { #USE LIKE: jmux_command x y..y
