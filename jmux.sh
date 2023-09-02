@@ -48,7 +48,7 @@ function jmux() {
         local param="$1"
         shift
         local reached="false"
-        if [ "$param" = "connect" ]; then reached="true"; jmux_connect "$@"; echo "$@"; fi
+        if [ "$param" = "connect" ]; then reached="true"; jmux_connect "$@"; fi
         if [ "$param" = "command" ]; then reached="true"; jmux_command "$@"; fi
         if [ "$param" = "hide" ]; then reached="true"; jmux_hide; fi
         if [ "$param" = "disconnect" ]; then reached="true"; jmux_disconnect; fi
@@ -65,23 +65,32 @@ function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip
     if tmux has-session -t jsession 2>/dev/null; then
         jmux_show
     elif [ $# -lt 1 ] || [ $# -gt 4 ]; then   
-        echo "No current session active to connect to..."
+        echo "\nNo current session active to connect to..."
         echo "Start a jmux connect session with at least one input of user@ip (up to limmit of four)"
         echo "Min: jmux connect user@ip" 
         echo "Max: jmux connect user@ip1 user@ip2 user@ip3 user@ip4" 
     else
         read -s -p "Enter the password being used on all these servers:" serverpass  
-        tmux new-session -d -s jsession:jmux
-        tmux attach-session -t jsession:jmux
-        tmux new-window -n jwindow "sshpass -p $serverpass ssh -t $1"
-        shift
+        # Create a new tmux session named "jsession"
+        tmux new-session -d -s jsession
+        # Attach to the session
+        tmux attach-session -t jsession
+        # Create a new window named "jwindow" for the first SSH connection
+        #tmux new-window -n jwindow "sshpass -p $serverpass ssh $1"
+        # Attach to the "jwindow" window
+        #tmux attach-session -t jsession:jwindow
+        # Shift the arguments to remove the first IP address
+        #shift
+        # Loop through the remaining IP addresses and create vertical splits
         for ip in "$@"; do
-            tmux split-window -v "sshpass -p $serverpass ssh -t $ip"
+            tmux split-window -v "sshpass -p $serverpass ssh $ip"
         done
-        tmux attach-session -t jsession:jwindow
+        # Set the layout to even-vertical
         tmux select-layout even-vertical
+        # Enable pane synchronization
         tmux setw synchronize-panes on
-        #tmux kill-window -t 0
+        # Attach to the session
+        tmux attach-session -t jsession
     fi
 }
 function jmux_command() { #USE LIKE: jmux_command x y..y
@@ -109,7 +118,7 @@ function jmux_disconnect() { #USE LIKE: jmux_disconnect
     tmux kill-session -t jsession
 }
 function jmux_dependencies() {
-    sudo apt install curl sshpass tmux ssh-askpass ssh_copy_id git -y
+    sudo apt install curl sshpass tmux ssh-askpass git -y
 }
 function jmux_update(){
     # Define the line to check for
