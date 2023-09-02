@@ -1,6 +1,6 @@
 # jmux - ((tmux wrapper))  
 Current limitations are on the amount of tmux panes (not windows) you can fit verticaly set to four.  
-Also jmux itself only takes a max of thirty parameters.  
+Also jmux itself only takes a max of ten parameters. Caution using jmux command better to syncronise panes...   
   
   
 ## To install jmux run...  
