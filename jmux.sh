@@ -1,4 +1,6 @@
 #!/bin/bash
+command_width=15
+description_width=40
 commands=( \
 "connect" \
 "command" \
@@ -31,18 +33,16 @@ function jmux() {
         for ((i = 0; i < 4; i++)); do #for ((i = 0; i < ${#commands[@]}; i++)); do
             command="${commands[i]}"
             description="${descriptions[i]}"
-            # Use printf to format the output with columns
-            printf "jmux %-15s %s\n" "$command:" "$description"
+            printf "jmux %-*s %-*s\n" "$command_width" "$command:" "$description_width" "$description"
         done
         echo ""
         for ((i = 4; i < 6; i++)); do #for ((i = 0; i < ${#commands[@]}; i++)); do
             command="${commands[i]}"
             description="${descriptions[i]}"
-            # Use printf to format the output with columns
-            printf "jmux %-15s %s\n" "$command:" "$description"
+            printf "jmux %-*s %-*s\n" "$command_width" "$command:" "$description_width" "$description"
         done
         echo ""
-        printf "jmux %-15s %s\n" "$command[6]:" "$description[6]"
+        printf "jmux %-*s %-*s\n" "$command_width" "$command[6]:" "$description_width" "$description[6]"
         echo "."
         echo "."
         echo "."
@@ -183,8 +183,7 @@ function jmux_more(){
     for ((i = 7; i < ${#commands[@]}; i++)); do
         command="${commands[i]}"
         description="${descriptions[i]}"
-        # Use printf to format the output with columns
-        printf "jmux %-15s %s\n" "$command:" "$description"
+        printf "jmux %-*s %-*s\n" "$command_width" "$command:" "$description_width" "$description"
     done
     echo "================================================================="
     echo "Unlike ssh commands, jmux can still keep ssh sessions alive"
