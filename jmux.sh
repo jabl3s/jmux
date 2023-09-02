@@ -32,17 +32,17 @@ function jmux() {
             command="${commands[i]}"
             description="${descriptions[i]}"
             # Use printf to format the output with columns
-            printf "jmux %-10s %s\n" "$command:" "$description"
+            printf "jmux %-15s %s\n" "$command:" "$description"
         done
         echo ""
         for ((i = 4; i < 6; i++)); do #for ((i = 0; i < ${#commands[@]}; i++)); do
             command="${commands[i]}"
             description="${descriptions[i]}"
             # Use printf to format the output with columns
-            printf "jmux %-10s %s\n" "$command:" "$description"
+            printf "jmux %-15s %s\n" "$command:" "$description"
         done
         echo ""
-        printf "jmux %-10s %s\n" "$command[6]:" "$description[6]"
+        printf "jmux %-15s %s\n" "$command[6]:" "$description[6]"
         echo "."
         echo "."
         echo "."
@@ -184,7 +184,7 @@ function jmux_more(){
         command="${commands[i]}"
         description="${descriptions[i]}"
         # Use printf to format the output with columns
-        printf "jmux %-10s %s\n" "$command:" "$description"
+        printf "jmux %-15s %s\n" "$command:" "$description"
     done
     echo "================================================================="
     echo "Unlike ssh commands, jmux can still keep ssh sessions alive"
