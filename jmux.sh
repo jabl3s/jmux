@@ -1,6 +1,6 @@
 #!/bin/bash
 function jmux() {
-    if [ $# -lt 1 ] && [ $# -gt 30 ]; then
+    if [ $# -lt 1 ] || [ $# -gt 10 ]; then
         echo ""
         echo "======================================================================"
         echo "JMUX is a TMUX wrapper, see uses below" 
@@ -18,7 +18,6 @@ function jmux() {
         echo "."
         echo "."
         echo "======================================================================"
-
     else
         local param="$1"
         shift
@@ -26,13 +25,13 @@ function jmux() {
         if [ $param = "connect" ]; then $reached = "true"; jmux_connect "$@"; fi
         if [ $param = "command" ]; then $reached = "true"; jmux_command "$@"; fi
         if [ $param = "hide" ]; then $reached = "true"; jmux_hide; fi
-        if [ $param = "close" ]; then $reached = "true"; jmux_close; fi
+        if [ $param = "close" ]; then $reached = "true"; jmux_disconnect; fi
         if [ $param = "dependencies" ]; then $reached = "true"; jmux_dependencies; fi
         if [ $param = "update" ]; then $reached = "true"; jmux_update; fi
         if [ $param = "migrate" ]; then $reached = "true"; jmux_migrate "$@"; fi
         if [ $param = "rke" ]; then $reached = "true"; jmux_rke "$@"; fi
         if [ $param = "ssh_copy_id" ]; then $reached = "true"; jmux_ssh_copy_id "$@"; fi
-        if [ $param = "help" ]; then $reached = "true"; jmux; fi
+        if [ $param = "more" ]; then $reached = "true"; jmux_more; fi
         if [ $reached = "true" ]; then echo ""; else echo ""; fi
     fi
 }
@@ -160,7 +159,7 @@ function jmux_more(){
         echo "even without connection and stays active until jmux close is called."
         echo "Just reconnect to any lost session or from a jmux hide call with an empty jmux connect"
         echo ""
-        echo "jmux function itself can take up to 30 parameters max" 
+        echo "jmux function itself can take up to 10 parameters max" 
         echo "if you need more, for example, when using jmux command, "
         echo "consider making the whole command a string of one parameter"
         echo "e.g. jmux command 1 pwd && ls -a "
