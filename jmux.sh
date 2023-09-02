@@ -1,6 +1,12 @@
 #!/bin/bash
-command_width=15
-description_width=40
+function jmux_print_prompt(start,finish){
+    local command_width=14
+    for ((i = "$start"; i < "$finish"; i++)); do #for ((i = 0; i < ${#commands[@]}; i++)); do
+        command="${commands[i]}"
+        description="${descriptions[i]}"
+        printf "jmux %-*s %s\n" "$command_width" "$command:" "${description:0:$((command_width-2))}.."
+    done
+}
 commands=( \
 "connect" \
 "command" \
@@ -29,20 +35,11 @@ function jmux() {
         echo "======================================================================"
         echo "JMUX is a TMUX wrapper, see uses below" 
         echo ""
-        # Iterate over the arrays and format the output
-        for ((i = 0; i < 4; i++)); do #for ((i = 0; i < ${#commands[@]}; i++)); do
-            command="${commands[i]}"
-            description="${descriptions[i]}"
-            printf "jmux %-*s %-*s\n" "$command_width" "$command:" "$description_width" "$description"
-        done
+        jmux_print_prompt(1,4)
         echo ""
-        for ((i = 4; i < 6; i++)); do #for ((i = 0; i < ${#commands[@]}; i++)); do
-            command="${commands[i]}"
-            description="${descriptions[i]}"
-            printf "jmux %-*s %-*s\n" "$command_width" "$command:" "$description_width" "$description"
-        done
+        jmux_print_prompt(4,6)
         echo ""
-        printf "jmux %-*s %-*s\n" "$command_width" "$command[6]:" "$description_width" "$description[6]"
+        jmux_print_prompt(6,7)
         echo "."
         echo "."
         echo "."
@@ -180,11 +177,7 @@ function jmux_ssh_copy_id(){
     fi
 }
 function jmux_more(){
-    for ((i = 7; i < ${#commands[@]}; i++)); do
-        command="${commands[i]}"
-        description="${descriptions[i]}"
-        printf "jmux %-*s %-*s\n" "$command_width" "$command:" "$description_width" "$description"
-    done
+    jmux_print_prompt(7, ${#commands[@]})
     echo "================================================================="
     echo "Unlike ssh commands, jmux can still keep ssh sessions alive"
     echo "even without connection and stays active until jmux close is called."
