@@ -3,14 +3,14 @@ function jmux_print_prompt(){
     local start="$1"
     local finish="$2"
     local command_width=14
-    local description_width=20
+    local description_width=($(tput cols)-command_width)
     for ((i = "$start"; i < "$finish"; i++)); do #for ((i = 0; i < ${#commands[@]}; i++)); do
         command="${commands[i]}"
         description="${descriptions[i]}"
         local descriptionlength=${#description}
         for ((trunkstart = 0; trunkstart < descriptionlength; trunkstart += description_width)); do
-            local truncated_part="${description:trunkstart:description_width}"
-            if [ trunkstart=0 ]; then
+            local truncated_part="${description:trunkstart:(trunkstart+description_width)}"
+            if [ trunkstart -e 0 ]; then
                 printf "jmux %-*s %s\n" "$command_width" "$command:" "$truncated_part"
             else
                 printf "%-${command_width}s %s\n" " " "${description:description_width}"
@@ -43,7 +43,7 @@ descriptions=( \
 function jmux() {
     if [ $# -lt 1 ] || [ $# -gt 10 ]; then
         echo ""
-        echo "======================================================================"
+        echo "$(tput cols)" "======================================================================"
         echo "JMUX is a TMUX wrapper, see uses below" 
         echo ""
         jmux_print_prompt 1 4
