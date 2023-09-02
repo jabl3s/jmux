@@ -3,7 +3,7 @@ function jmux_print_prompt(){
     local start="$1"
     local finish="$2"
     local command_width=14
-    local description_width=$(tput cols)-command_width-2
+    local description_width=$(tput cols)-command_width-10
     for ((i = "$start"; i < "$finish"; i++)); do #for ((i = 0; i < ${#commands[@]}; i++)); do
         command="${commands[i]}"
         description="${descriptions[i]}"
@@ -13,7 +13,7 @@ function jmux_print_prompt(){
             if [ $trunkstart = 0 ]; then
                 printf "jmux %-*s %s\n" "$command_width" "$command:" "$truncated_part"
             else
-                printf "%-${command_width}s %s\n" " " "${truncated_part}"
+                printf "%-${command_width+5}s %s\n" " " "${truncated_part}"
             fi
         done
     done
