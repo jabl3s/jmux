@@ -3,10 +3,19 @@ function jmux_print_prompt(){
     local start="$1"
     local finish="$2"
     local command_width=14
+    local description_width=20
     for ((i = "$start"; i < "$finish"; i++)); do #for ((i = 0; i < ${#commands[@]}; i++)); do
         command="${commands[i]}"
         description="${descriptions[i]}"
-        printf "jmux %-*s %s\n" "$command_width" "$command:" "${description:0:30)}.." #"${description:0:$((command_width-2))}.."
+        local descriptionlength=${#description}
+        for ((trunkstart = 0; trunkstart < descriptionlength; trunkstart += description_width)); do
+            local truncated_part="${description:trunkstart:description_width}"
+            if [ trunkstart=0 ]; then
+                printf "jmux %-*s %s\n" "$command_width" "$command:" "$truncated_part"
+            else
+                printf "%-${command_width}s %s\n" " " "${description:description_width}"
+            fi
+        done
     done
 }
 commands=( \
