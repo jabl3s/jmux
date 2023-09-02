@@ -1,26 +1,24 @@
 #!/bin/bash
 function jmux() {
-    if [ $# -lt 1 ]; then
+    if [ $# -lt 1 ] && [ $# -gt 30 ]; then
         echo ""
         echo "======================================================================"
         echo "JMUX is a TMUX wrapper, see uses below" 
         echo ""
-        echo "jmux connect      user@ip user@ip user@ip user@ip (limmited to four tmux ssh panes at a time)"
-        echo "jmux command      [number_of_panes] then enter most types of commands here like normal, or as string, be sure to pipe password in for sudo commands, leave blank to send ctrl+c"
-        echo "jmux hide         (Hides the current jmux connect ssh/tmux session, it is still active even if connection goes down)"        
-        echo "jmux show         (Shows the session)"        
-        echo "jmux close        (Closes all ssh sessions then closes jmux session)"
+        echo "jmux connect      user@ip user@ip user@ip user@ip (limmited to four tmux ssh panes at a time.)"
+        echo "jmux command      [number_of_panes] leave blank to send ctrl+c, pipe password in for sudo commands, see example of this in read me."
+        echo "jmux hide         (jmux hide keeps ssh panes active, reconnect with empty jmux connect"               
+        echo "jmux disconnect   (All ssh panes connections end and jmux session ends, i.e. returning the console back to normal)"
         echo ""
         echo "jmux dependencies (after first ever jmux.sh download run this to get everything needed for jmux to work)"
         echo "jmux update       (gets the latest jmux from jabl3s git)"
-        echo "jmux migrate      user@ip (work in progress)"
-        echo "jmux rke"
-        echo "jmux ssh_copy_id  user@ip user@ip user@ip... (work in progress)"
-        echo "jmux help"
-        echo "======================================================================"
         echo ""
-        echo "Unlike ssh commands, jmux connect can still keep ssh sessions alive without connection..."
-        echo "...just reconnect with jmux show"
+        echo "jmux more         (Extend this prompt with more commands and additional info like current the limitations of jmux)"
+        echo "."
+        echo "."
+        echo "."
+        echo "======================================================================"
+
     else
         local param="$1"
         shift
@@ -28,7 +26,6 @@ function jmux() {
         if [ $param = "connect" ]; then $reached = "true"; jmux_connect "$@"; fi
         if [ $param = "command" ]; then $reached = "true"; jmux_command "$@"; fi
         if [ $param = "hide" ]; then $reached = "true"; jmux_hide; fi
-        if [ $param = "show" ]; then $reached = "true"; jmux_show; fi
         if [ $param = "close" ]; then $reached = "true"; jmux_close; fi
         if [ $param = "dependencies" ]; then $reached = "true"; jmux_dependencies; fi
         if [ $param = "update" ]; then $reached = "true"; jmux_update; fi
@@ -40,12 +37,13 @@ function jmux() {
     fi
 }
 function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip -ssh_copy_id
-    local option_ssh_copy_id=false
-    if [ $# -lt 1 ] && [ $number -gt 4 ]; then
-        echo "Atleast one user@ip and up to four for typical screen vertical space limits..."
-        echo "...as well as to prevent loops in this command from being too large."
-        echo "e.g.1. jmux connect user@ip" 
-        echo "e.g.2. jmux connect user@ip user@ip user@ip user@ip" 
+    if tmux has-session -t jsession 2>/dev/null; then
+        jmux_show
+    elif [ $# -lt 1 ] && [ $number -gt 4 ]; then
+        echo "No current session to connect to..."
+        echo "Start a jmux connect session with at least one input of user@ip (up to limmit of four)"
+        echo "Min: jmux connect user@ip" 
+        echo "Max: jmux connect user@ip user@ip user@ip user@ip" 
     else
         read -s -p "Enter the password being used on all these servers:" serverpass  
         tmux new-session -d -s jsession
@@ -88,7 +86,7 @@ function jmux_hide() { #USE LIKE: jmux_hide
 function jmux_show() { #USE LIKE: jmuxclose
     tmux attach-session -t jsession:0.0
 }
-function jmux_close() { #USE LIKE: jmuxclose
+function jmux_disconnect() { #USE LIKE: jmuxclose
     tmux kill-session -t jsession
 }
 function jmux_dependencies() {
@@ -152,5 +150,22 @@ function jmux_ssh_copy_id(){
         done
         echo "ssh pub keys copied to servers above with credentials provided, quitting..." 
     fi
+}
+function jmux_more(){
+        echo "jmux migrate      user@ip (work in progress)"
+        echo "jmux rke          (work in progress)"
+        echo "jmux ssh_copy_id  user@ip user@ip user@ip... (work in progress)"
+        echo "================================================================="
+        echo "Unlike ssh commands, jmux can still keep ssh sessions alive"
+        echo "even without connection and stays active until jmux close is called."
+        echo "Just reconnect to any lost session or from a jmux hide call with an empty jmux connect"
+        echo ""
+        echo "jmux function itself can take up to 30 parameters max" 
+        echo "if you need more, for example, when using jmux command, "
+        echo "consider making the whole command a string of one parameter"
+        echo "e.g. jmux command 1 pwd && ls -a "
+        echo "becomes three jmux parameters instead of six by using quotes around the 'sent' command..."
+        echo "jmux command 1 'pwd && ls -a'"
+        echo ""
 }
 
