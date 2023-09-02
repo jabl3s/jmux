@@ -73,6 +73,7 @@ function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip
         read -s -p "Enter the password being used on all these servers:" serverpass  
         tmux new-session -d -s jsession
         tmux new-window -n jwindow "sshpass -p $serverpass ssh -t $1"
+        tmux kill-window -t 0
         shift
         jmux_show
         for ip in "$@"; do
