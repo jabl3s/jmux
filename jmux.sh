@@ -58,7 +58,7 @@ function jmux() {
         if [ "$param" = "rke" ]; then reached="true"; jmux_rke "$@"; fi
         if [ "$param" = "ssh_copy_id" ]; then reached="true"; jmux_ssh_copy_id "$@"; fi
         if [ "$param" = "more" ]; then reached="true"; jmux_more; fi
-        if [ "$reached" = "true" ]; then echo ""; else printf "\n\nDidnt recognise that jmux command: $param...\n take a look at this...\n\n"; jmux; fi
+        if [ "$reached" = "true" ]; then echo ""; else printf "\n\nDidnt recognise that jmux command: $param...\ntake a look at this...\n\n"; jmux; fi
     fi
 }
 function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip
