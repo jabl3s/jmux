@@ -74,13 +74,13 @@ function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip
     else
         read -s -p "Enter the password being used on all these servers:" serverpass  
         # Create a new tmux session named "jsession"
-        ssh-keygen -f "~/.ssh/known_hosts" -R "$1"
+        ssh-keygen -f "~/.ssh/known_hosts" -R "$1" && \
         tmux new-session -d -s jsession "sshpass -p $serverpass ssh -o StrictHostKeyChecking=no $1"
         # Shift the arguments to remove the first IP address
         shift
         # Loop through the remaining IP addresses and create vertical splits
         for ip in "$@"; do
-            ssh-keygen -f "~/.ssh/known_hosts" -R "$ip"
+            ssh-keygen -f "~/.ssh/known_hosts" -R "$ip" && \
             tmux split-window -v "sshpass -p $serverpass ssh -o StrictHostKeyChecking=no $ip"
         done
         # Set the layout to even-vertical
