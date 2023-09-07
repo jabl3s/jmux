@@ -4,13 +4,11 @@ Do not use "ssh user@ip" anymore! Simply replace "ssh user@ip" with "jmux connec
 - Also run as many as upto four ssh sessions in the same window at once with "jmux connect user@ip1 user@ip2 user@ip3 user@ip4", so long its the same username password on all ssh connections...  
 - Current limitations are on the amount of tmux panes (not windows) you can fit verticaly set to four.  
 Also jmux itself only takes a max of ten parameters. Caution using jmux command better to syncronise panes...    
-## Install...  
-### ...this only once to add the required line to your ~./bashrc:  
-echo "source ~/jmux.sh" >> ~/.bashrc  
-### ...then this as many times you like to initial install jmux:  
-curl -o ~/jmux.sh https://raw.githubusercontent.com/jabl3s/jmux/stable-release/jmux.sh && source ~/.bashrc && jmux depencdencies    
+## Install...    
+- echo "source ~/jmux.sh" >> ~/.bashrc  
+- curl -o ~/jmux.sh https://raw.githubusercontent.com/jabl3s/jmux/stable-release/jmux.sh && source ~/.bashrc && jmux depencdencies    
 ### After doing the above two commands now the shortcut below is available to do similar without hassle:  
-jmux update   
+- jmux update   
   
 ## Usage  
 - Tmux pane navigation is Ctrl+B the arrow key.  
