@@ -1,5 +1,5 @@
 # JMUX - TMUX wrapper  
-Replace "ssh user@ip" with "jmux connect user@ip", use "jmux kill" if tmux session is being buggy and then simply re-connect.  
+Replace "ssh user@ip" with "jmux connect user@ip", use "jmux kill" if tmux session is being buggy and then simply re-start.  
 - Reasoning: single ssh commands fail if connection is lost to server from remote machine, however, JMUX/TMUX perssists ssh sessions after unwated connection loss or even if you close your ssh window without first calling "exit"
 - Also run as many as upto four ssh sessions in the same window at once with "jmux connect user@ip1 user@ip2 user@ip3 user@ip4", so long its the same username password on all ssh connections...  
 - Current limitations are on the amount of tmux panes (not windows) you can fit verticaly set to four.  
