@@ -116,6 +116,11 @@ function jmux_kill() { #USE LIKE: jmux_kill
 }
 function jmux_dependencies() {
     sudo apt update -y && sudo apt install curl sshpass tmux ssh-askpass git -y
+    if [ ! -e "~/.ssh/known_hosts" ]; then
+    touch "~/.ssh/known_hosts"
+    echo "Created ~/.ssh/known_hosts"
+    fi
+    echo "N.B. check the hosts you jmux connect to are who they say they are, cus jmux connect wipes all known hosts known to your system every connect call..."  
 }
 function jmux_update(){
     # Define the line to check for
