@@ -62,7 +62,6 @@ function jmux() {
     fi
 }
 function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip
-    > ~/.ssh/known_hosts
     if tmux has-session -t jsession 2>/dev/null; then
         echo "Recconecting to un exited jmux session in 3 seconds..."
         sleep 3
@@ -73,6 +72,7 @@ function jmux_connect() { #USE LIKE: jmuxconnect user@ip..user@ip
         echo "Min: jmux connect user@ip" 
         echo "Max: jmux connect user@ip1 user@ip2 user@ip3 user@ip4" 
     else
+        > ~/.ssh/known_hosts
         read -s -p "Enter the password being used on all these servers:" serverpass  
         # Create a new tmux session named "jsession"
         tmux new-session -d -s jsession "sshpass -p $serverpass ssh -o StrictHostKeyChecking=no $1"
