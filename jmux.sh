@@ -120,7 +120,7 @@ function jmux_dependencies() {
     touch "~/.ssh/known_hosts"
     echo "Created ~/.ssh/known_hosts"
     fi
-    echo "N.B. check the hosts you jmux connect to are who they say they are, cus jmux connect wipes all known hosts known to your system every connect call..."  
+    echo "N.B. check the hosts you jmux connect to are who they say they are..."  
 }
 function jmux_update(){
     # Define the line to check for
