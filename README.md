@@ -5,8 +5,12 @@ Replace "ssh user@ip" with "jmux connect user@ip", use "jmux kill" if tmux sessi
 - Current limitations are on the amount of tmux panes (not windows) you can fit verticaly set to four.  
 Also jmux itself only takes a max of ten parameters. Caution using "jmux command", better to syncronise panes...    
 ## Install on linux...    
-``` echo "source ~/jmux.sh" >> ~/.bashrc ```    
-``` curl -o ~/jmux.sh https://raw.githubusercontent.com/jabl3s/jmux/stable-release/jmux.sh && source ~/.bashrc && jmux dependencies ```  
+``` bash
+echo "source ~/jmux.sh" >> ~/.bashrc
+```    
+``` bash
+curl -o ~/jmux.sh https://raw.githubusercontent.com/jabl3s/jmux/stable-release/jmux.sh && source ~/.bashrc && jmux dependencies
+```  
 ### After doing the above two commands now the shortcut below is available to do similar without hassle:  
 - jmux update   
   
