@@ -12,7 +12,9 @@ echo "source ~/jmux.sh" >> ~/.bashrc
 curl -o ~/jmux.sh https://raw.githubusercontent.com/jabl3s/jmux/stable-release/jmux.sh && source ~/.bashrc && jmux dependencies
 ```  
 ### After doing the above two commands now the shortcut below is available to do similar without hassle:  
-- jmux update   
+- ``` bash
+  jmux update
+  ```   
   
 ## Usage  
 - Tmux pane navigation is Ctrl+B the arrow key.  
